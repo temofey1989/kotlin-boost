@@ -16,4 +16,4 @@ import io.kotest.core.spec.Spec
  * })
  * ```
  */
-fun Spec.installRabbitMq() = install(RabbitMqExtension)
+fun Spec.installRabbitMq() = install(RabbitMqExtension.INSTANCE)

@@ -1,30 +1,34 @@
 package io.justdevit.kotlin.boost.kotest.testcontainers.postgres
 
+import io.justdevit.kotlin.boost.extension.runIf
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.kotest.core.spec.Spec
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.containers.PostgreSQLContainer.POSTGRESQL_PORT
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReentrantLock
 import kotlin.reflect.KClass
-import kotlin.reflect.jvm.jvmName
 
 private var postgresContainer: PostgreSQLContainer<*>? = null
-
-private val POSTGRES_EXTENSION_ACTIVATION_ANNOTATIONS: List<String> =
-    listOf(
-        "io.micronaut.test.extensions.kotest5.annotation.MicronautTest",
-    )
+private val LOCK: Lock = ReentrantLock()
 
 /**
  * The `PostgresExtension` class is an implementation of the `ExternalToolExtension` interface that represents an extension for running PostgreSQL containers.
  * It provides functionality to start and stop a PostgreSQL container as needed.
  */
-object PostgresExtension : ExternalToolExtension<PostgreSQLContainer<*>, PostgreSQLContainer<*>> {
+class PostgresExtension<A : Annotation>(private val activationAnnotations: Collection<KClass<A>> = emptySet()) : ExternalToolExtension<PostgreSQLContainer<*>, PostgreSQLContainer<*>> {
+
+    companion object {
+        val INSTANCE: PostgresExtension<*> by lazy { PostgresExtension<Annotation>() }
+    }
+
+    constructor(vararg activationAnnotations: KClass<A>) : this(activationAnnotations.toSet())
+
     override fun <T : Spec> instantiate(clazz: KClass<T>): Spec? {
         if (clazz
                 .annotations
-                .map { it.annotationClass.jvmName }
-                .any { it in POSTGRES_EXTENSION_ACTIVATION_ANNOTATIONS }
+                .any { it.annotationClass in activationAnnotations }
         ) {
             startContainer()
         }
@@ -41,7 +45,7 @@ object PostgresExtension : ExternalToolExtension<PostgreSQLContainer<*>, Postgre
     }
 
     private fun startContainer() {
-        if (postgresContainer == null) {
+        LOCK.runIf({ postgresContainer == null }) {
             postgresContainer =
                 PostgreSQLContainer("postgres:latest").apply {
                     start()

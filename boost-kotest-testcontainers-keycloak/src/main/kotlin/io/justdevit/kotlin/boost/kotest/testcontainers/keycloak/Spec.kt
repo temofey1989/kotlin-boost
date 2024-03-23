@@ -23,4 +23,4 @@ import io.kotest.core.spec.Spec
  *
  * @see KeycloakExtension
  */
-fun Spec.installKeycloak() = install(KeycloakExtension)
+fun Spec.installKeycloak() = install(KeycloakExtension.INSTANCE)
