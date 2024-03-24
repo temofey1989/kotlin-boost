@@ -337,7 +337,7 @@ implementation("io.justdevit.kotlin:boost-kotest-mockserver:$kotlinBoostVersion"
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              MockServerExtension,
+              MockServerExtension(MicronautTest::class),
           )
   }
   ```
@@ -353,7 +353,45 @@ implementation("io.justdevit.kotlin:boost-kotest-mockserver:$kotlinBoostVersion"
 
 ## `Boost Kotest TestContainers`
 
-The module provides API for all TestContainers modules. 
+The module provides API for all TestContainers modules. Also it provides Stubbing Extension for the tests.
+
+### Configuration
+
+#### Maven
+
+```xml
+
+<dependency>
+  <groupId>io.justdevit.kotlin</groupId>
+  <artifactId>boost-kotest-testcontainers</artifactId>
+  <version>${kotlin-boost.version}</version>
+</dependency>
+```
+
+#### Gradle (.kts)
+
+```kotlin
+implementation("io.justdevit.kotlin:boost-kotest-testcontainers:$kotlinBoostVersion")
+```
+
+### Usage
+
+* **Apply stubbing extension globally**
+  ```kotlin
+  object ProjectConfig : AbstractProjectConfig() {
+      override fun extensions() =
+          listOf(
+              StubbingExtension({ System.getenv("DOCKER_HOST").isNullOrBlank() }),
+          )
+  }
+  ```
+* **Install stubbing extension in test spec**
+  ```kotlin
+  class MyTest : FreeSpec({
+      installStubbing{ System.getenv("DOCKER_HOST").isNullOrBlank() }
+      ...
+  })
+  ```
 
 ---
 
@@ -387,7 +425,7 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-keycloak:$kotlin
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              KeycloakExtension,
+              KeycloakExtension(MicronautTest::class),
           )
   }
   ```
@@ -431,7 +469,7 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-postgres:$kotlin
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              PostgresExtension,
+              PostgresExtension(MicronautTest::class),
           )
   }
   ```
