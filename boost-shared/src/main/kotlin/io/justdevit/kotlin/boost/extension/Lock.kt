@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Lock
  * @param predicate A function that evaluates the condition for executing the [action].
  * @param action The operation to perform if the [predicate] evaluates to `true`.
  */
-fun Lock.runIf(predicate: () -> Boolean, action: () -> Unit) {
+inline fun Lock.runIf(predicate: () -> Boolean, action: () -> Unit) {
     if (predicate()) {
         lock()
         try {

@@ -1,5 +1,6 @@
 package io.justdevit.kotlin.boost.logging
 
+import io.justdevit.kotlin.boost.extension.runIf
 import java.util.ServiceLoader
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -35,17 +36,12 @@ fun <T> logScope(vararg pairs: Pair<String, String?>, action: () -> T): T {
  * @throws [RuntimeException] if no concrete implementation of LogContextProcessor is found.
  */
 internal fun findLogContextProcessor(): LogContextProcessor {
-    if (logContextProcessor != null) {
-        return logContextProcessor!!
+    LOG_CONTEXT_PROCESSOR_LOCK.runIf({ logContextProcessor != null }) {
+        val loader = ServiceLoader.load(LogContextProcessor::class.java)
+        val factory = loader.findFirst().getOrNull()
+        factory.also {
+            logContextProcessor = it
+        }
     }
-    LOG_CONTEXT_PROCESSOR_LOCK.lock()
-    if (logContextProcessor != null) {
-        return logContextProcessor!!
-    }
-    val loader = ServiceLoader.load(LogContextProcessor::class.java)
-    val factory = loader.findFirst().getOrNull()
-    return factory.also {
-        logContextProcessor = it
-        LOG_CONTEXT_PROCESSOR_LOCK.unlock()
-    } ?: throw RuntimeException("No ${LogContextProcessor::class.java.name} found. Add a dependency for concrete implementation.")
+    return logContextProcessor ?: throw RuntimeException("No ${LogContextProcessor::class.java.name} found. Add a dependency for concrete implementation.")
 }

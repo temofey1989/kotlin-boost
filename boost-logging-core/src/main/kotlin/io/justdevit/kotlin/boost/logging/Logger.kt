@@ -1,5 +1,6 @@
 package io.justdevit.kotlin.boost.logging
 
+import io.justdevit.kotlin.boost.extension.runIf
 import java.util.ServiceLoader
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -65,17 +66,12 @@ fun logger(name: String): Logger = findLoggerFactory().getLogger(name)
 fun logger(clazz: Class<*>): Logger = findLoggerFactory().getLogger(clazz)
 
 private fun findLoggerFactory(): LoggerFactory {
-    if (loggerFactory != null) {
-        return loggerFactory!!
+    LOGGER_FACTORY_LOCK.runIf({ loggerFactory != null }) {
+        val loader = ServiceLoader.load(LoggerFactory::class.java)
+        val factory = loader.findFirst().getOrNull()
+        factory.also {
+            loggerFactory = it
+        }
     }
-    LOGGER_FACTORY_LOCK.lock()
-    if (loggerFactory != null) {
-        return loggerFactory!!
-    }
-    val loader = ServiceLoader.load(LoggerFactory::class.java)
-    val factory = loader.findFirst().getOrNull()
-    return factory.also {
-        loggerFactory = it
-        LOGGER_FACTORY_LOCK.unlock()
-    } ?: throw RuntimeException("No ${LoggerFactory::class.java.name} found. Add a dependency for concrete implementation.")
+    return loggerFactory ?: throw RuntimeException("No ${LoggerFactory::class.java.name} found. Add a dependency for concrete implementation.")
 }
