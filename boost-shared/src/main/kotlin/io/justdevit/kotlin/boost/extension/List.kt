@@ -41,3 +41,12 @@ fun <T : Any?> T.copyToList(times: Int = 1, effect: (T) -> T = { it }): List<T> 
  * @return `true` if the list has exactly one element, `false` otherwise.
  */
 fun <E> List<E>.hasSingleElement(): Boolean = size == 1
+
+/**
+ * Maps each element of the given [List] using the provided [mapper] function,
+ * or returns an empty [List] if the input [List] is null.
+ *
+ * @param mapper The function used to map each element of the list.
+ * @return A new [List] containing the mapped elements, or an empty [List] if the input [List] is null.
+ */
+fun <T, U> List<T>?.mapOrEmpty(mapper: (T) -> U): List<U> = this?.map { mapper(it) } ?: emptyList()
