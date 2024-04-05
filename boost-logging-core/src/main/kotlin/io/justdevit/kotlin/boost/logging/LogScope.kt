@@ -36,7 +36,7 @@ fun <T> logScope(vararg pairs: Pair<String, String?>, action: () -> T): T {
  * @throws [RuntimeException] if no concrete implementation of LogContextProcessor is found.
  */
 internal fun findLogContextProcessor(): LogContextProcessor {
-    LOG_CONTEXT_PROCESSOR_LOCK.runIf({ logContextProcessor != null }) {
+    LOG_CONTEXT_PROCESSOR_LOCK.runIf({ logContextProcessor == null }) {
         val loader = ServiceLoader.load(LogContextProcessor::class.java)
         val factory = loader.findFirst().getOrNull()
         factory.also {

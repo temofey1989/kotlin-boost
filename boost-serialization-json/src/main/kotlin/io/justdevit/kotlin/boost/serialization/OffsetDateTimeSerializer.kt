@@ -10,6 +10,8 @@ import java.time.OffsetDateTime
 
 object OffsetDateTimeSerializer : KSerializer<OffsetDateTime> {
     override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("java.time.OffsetDateTime", STRING)
+
     override fun serialize(encoder: Encoder, value: OffsetDateTime) = encoder.encodeString(value.toString())
+
     override fun deserialize(decoder: Decoder): OffsetDateTime = OffsetDateTime.parse(decoder.decodeString())
 }

@@ -66,7 +66,7 @@ fun logger(name: String): Logger = findLoggerFactory().getLogger(name)
 fun logger(clazz: Class<*>): Logger = findLoggerFactory().getLogger(clazz)
 
 private fun findLoggerFactory(): LoggerFactory {
-    LOGGER_FACTORY_LOCK.runIf({ loggerFactory != null }) {
+    LOGGER_FACTORY_LOCK.runIf({ loggerFactory == null }) {
         val loader = ServiceLoader.load(LoggerFactory::class.java)
         val factory = loader.findFirst().getOrNull()
         factory.also {
