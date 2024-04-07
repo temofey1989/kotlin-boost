@@ -20,3 +20,20 @@ inline fun <T> T?.ifExists(action: (T) -> Unit) {
  * @return a new list containing only the object itself as a single element.
  */
 fun <T> T.toSingletonList(): List<T> = listOf(this)
+
+/**
+ * Applies the given [block] lambda to the receiver object if it is not null.
+ *
+ * @param block The lambda function to be applied on the receiver object.
+ * @return The receiver object after applying the [block] function, or null if the receiver object is null.
+ */
+fun <T> T?.applyNotNull(block: T.() -> Unit): T? = this?.apply(block)
+
+/**
+ * Returns the non-null value if it is not null, or throws the specified exception.
+ *
+ * @param block The exception block to be executed if the value is null.
+ * @return The non-null value, if it is not null.
+ * @throws Exception the specified exception returned by the block if the value is null.
+ */
+fun <T> T?.orThrow(block: () -> Exception): T = this ?: throw block()
