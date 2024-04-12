@@ -37,3 +37,15 @@ fun <T> T?.applyNotNull(block: T.() -> Unit): T? = this?.apply(block)
  * @throws Exception the specified exception returned by the block if the value is null.
  */
 fun <T> T?.orThrow(block: () -> Exception): T = this ?: throw block()
+
+/**
+ * Adds a key-value pair to the given context map.
+ *
+ * @param value The value associated with the key.
+ */
+context(MutableMap<T, U>)
+infix fun <T : Any, U> T.to(value: U) {
+    this@MutableMap[this] = value
+}
+
+typealias MapBuilder<T, U> = MutableMap<T, U>.() -> Unit
