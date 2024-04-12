@@ -40,5 +40,5 @@ interface Loggable {
  * @see Logger
  */
 open class Logging(name: String? = null) : Loggable {
-    override val log: Logger = logger(name ?: javaClass.name)
+    override val log: Logger = logger(name ?: javaClass.loggerName)
 }
