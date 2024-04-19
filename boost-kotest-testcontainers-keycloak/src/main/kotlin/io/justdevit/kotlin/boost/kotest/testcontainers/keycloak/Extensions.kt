@@ -24,25 +24,35 @@ fun Given(spec: RequestSpecification, block: RequestSpecification.() -> RequestS
     }
 
 /**
- * Logs in a user and returns the authentication response.
+ * Performs a login operation with the specified parameters.
  *
- * @param username The username of the user. Defaults to TEST_USER if not provided.
- * @return The authentication response containing the access token, expiration time, refresh token, token type, session state, scope, and not-before policy.
+ * @param username The username to be used for authentication. Default value is `TEST_USER`.
+ * @param realm The realm to be used for authentication.
+ * If not specified, the first realm from the `KEYCLOAK_REALMS` system property will be used.
+ * If the system property is not set or no realms are defined, the default realm is "test".
+ * @param clientId The client ID to be used for authentication. If not specified, the `KEYCLOAK_DEFAULT_CLIENT_ID`
+ * system property will be used. If the system property is not set, the default client is "test".
+ *
+ * @return An [AuthResource] object representing the authentication response.
  */
-fun login(username: String = TEST_USER): AuthResource =
+fun login(
+    username: String = TEST_USER,
+    realm: String = KEYCLOAK_DEFAULT_REALM,
+    clientId: String = KEYCLOAK_DEFAULT_CLIENT_ID,
+): AuthResource =
     Given(KEYCLOAK_SPEC) {
         auth().none()
     } When {
         contentType(URLENC)
         formParams(
             mapOf(
+                "client_id" to listOf(clientId),
                 "grant_type" to listOf("password"),
-                "client_id" to listOf("connected-app"),
                 "username" to listOf(username),
                 "password" to listOf(username),
             ),
         )
-        post("/realms/connected/protocol/openid-connect/token")
+        post("/realms/$realm/protocol/openid-connect/token")
     } Then {
         statusCode(200)
         contentType(ContentType.JSON)

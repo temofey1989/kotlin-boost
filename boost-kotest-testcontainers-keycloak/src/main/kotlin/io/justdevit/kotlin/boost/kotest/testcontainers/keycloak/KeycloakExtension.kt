@@ -18,7 +18,7 @@ val KEYCLOAK_ADMIN_CLIENT: Keycloak by lazy {
     keycloakContainer!!.keycloakAdminClient
 }
 
-private var keycloakContainer: KeycloakContainer? = null
+internal var keycloakContainer: KeycloakContainer? = null
 private val LOCK: Lock = ReentrantLock()
 
 /**
@@ -61,17 +61,32 @@ class KeycloakExtension<A : Annotation>(private val activationAnnotations: Colle
                     }
                     start()
                     waitingFor(HostPortWaitStrategy())
-                    System.setProperty("KEYCLOAK_BASE_URL", authServerUrl)
+                    System.setProperty(KEYCLOAK_BASE_URL_PROPERTY, authServerUrl)
                 }
-            KEYCLOAK_ADMIN_CLIENT.realms().findAll().forEach {
-                val uppercaseName =
-                    it
-                        .realm
-                        .uppercase()
-                        .replace("-", "_")
-                System.setProperty("${uppercaseName}_JWKS_URI", "${keycloakContainer!!.authServerUrl}/realms/${it.realm}/protocol/openid-connect/certs")
-                System.setProperty("${uppercaseName}_ISSUER_URL", "${keycloakContainer!!.authServerUrl}/realms/${it.realm}")
+            configureSystemProperties()
+        }
+    }
+
+    private fun configureSystemProperties() {
+        val realms = KEYCLOAK_REALMS
+        System.setProperty(KEYCLOAK_REALMS_PROPERTY, realms.joinToString(separator = ","))
+        if (realms.size == 1) {
+            configureRealmIssuerUri(realms[0])
+        } else {
+            realms.forEach {
+                configureRealmIssuerUri(it, it.toSystemPropertyPrefix())
             }
         }
+    }
+
+    private fun String.toSystemPropertyPrefix() =
+        trim()
+            .uppercase()
+            .replace("-", "_")
+            .replace(Regex("\\s+"), "_")
+
+    private fun configureRealmIssuerUri(realm: String, prefix: String = "") {
+        val fullPrefix = if (prefix.isBlank()) "" else "${prefix}_"
+        System.setProperty("${fullPrefix}KEYCLOAK_ISSUER_URI", "${keycloakContainer!!.authServerUrl}/realms/$realm")
     }
 }
