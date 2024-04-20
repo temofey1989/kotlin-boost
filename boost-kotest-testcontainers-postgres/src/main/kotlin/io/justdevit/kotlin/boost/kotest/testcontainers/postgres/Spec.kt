@@ -16,4 +16,4 @@ import io.kotest.core.spec.Spec
  * })
  * ```
  */
-fun Spec.installPostgres() = install(PostgresExtension.INSTANCE)
+fun Spec.installPostgres() = install(PostgresExtension())

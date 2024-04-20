@@ -19,7 +19,7 @@ import org.mockserver.client.MockServerClient
  * })
  * ```
  */
-fun Spec.installMockServer() = install(MockServerExtension.INSTANCE)
+fun Spec.installMockServer() = install(MockServerExtension())
 
 /**
  * The `mockServer` property is a lazy-loaded instance of the [MockServerClient] class, which is used for interacting

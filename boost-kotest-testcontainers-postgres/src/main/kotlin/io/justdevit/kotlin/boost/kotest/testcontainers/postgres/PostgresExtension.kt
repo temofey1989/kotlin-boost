@@ -1,6 +1,9 @@
 package io.justdevit.kotlin.boost.kotest.testcontainers.postgres
 
 import io.justdevit.kotlin.boost.extension.runIf
+import io.justdevit.kotlin.boost.kotest.ANY_EXTENSION_FILTERS
+import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
+import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.kotest.core.spec.Spec
 import org.testcontainers.containers.PostgreSQLContainer
@@ -17,19 +20,12 @@ private val LOCK: Lock = ReentrantLock()
  * The `PostgresExtension` class is an implementation of the `ExternalToolExtension` interface that represents an extension for running PostgreSQL containers.
  * It provides functionality to start and stop a PostgreSQL container as needed.
  */
-class PostgresExtension<A : Annotation>(private val activationAnnotations: Collection<KClass<A>> = emptySet()) : ExternalToolExtension<PostgreSQLContainer<*>, PostgreSQLContainer<*>> {
+class PostgresExtension(private val filters: Collection<ExtensionFilter> = ANY_EXTENSION_FILTERS) : ExternalToolExtension<PostgreSQLContainer<*>, PostgreSQLContainer<*>> {
 
-    companion object {
-        val INSTANCE: PostgresExtension<*> by lazy { PostgresExtension<Annotation>() }
-    }
-
-    constructor(vararg activationAnnotations: KClass<A>) : this(activationAnnotations.toSet())
+    constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
 
     override fun <T : Spec> instantiate(clazz: KClass<T>): Spec? {
-        if (clazz
-                .annotations
-                .any { it.annotationClass in activationAnnotations }
-        ) {
+        if (filters.any { it.decide(clazz) }) {
             startContainer()
         }
         return null
@@ -59,4 +55,18 @@ class PostgresExtension<A : Annotation>(private val activationAnnotations: Colle
                 }
         }
     }
+}
+
+/**
+ * Creates a [PostgresExtension] with the specified predicates for annotation [A].
+ *
+ * @param predicates The predicates used to filter the annotations.
+ * @return The [PostgresExtension] object.
+ */
+inline fun <reified A : Annotation> PostgresExtension(vararg predicates: (A) -> Boolean): PostgresExtension {
+    val filters = when {
+        predicates.isEmpty() -> ANY_EXTENSION_FILTERS
+        else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
+    }
+    return PostgresExtension(filters)
 }

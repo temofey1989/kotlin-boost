@@ -1,6 +1,9 @@
 package io.justdevit.kotlin.boost.kotest.mockserver
 
 import io.justdevit.kotlin.boost.extension.runIf
+import io.justdevit.kotlin.boost.kotest.ANY_EXTENSION_FILTERS
+import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
+import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.kotest.core.spec.Spec
 import org.mockserver.client.MockServerClient
@@ -19,19 +22,12 @@ private val LOCK: Lock = ReentrantLock()
  * Represents a mock server extension for an external tool.
  * Implements the [ExternalToolExtension] interface.
  */
-class MockServerExtension<A : Annotation>(private val activationAnnotations: Collection<KClass<A>> = emptySet()) : ExternalToolExtension<ClientAndServer, MockServerClient> {
+class MockServerExtension(private val filters: Collection<ExtensionFilter> = ANY_EXTENSION_FILTERS) : ExternalToolExtension<ClientAndServer, MockServerClient> {
 
-    companion object {
-        val INSTANCE: MockServerExtension<*> by lazy { MockServerExtension<Annotation>() }
-    }
-
-    constructor(vararg activationAnnotations: KClass<A>) : this(activationAnnotations.toSet())
+    constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
 
     override fun <T : Spec> instantiate(clazz: KClass<T>): Spec? {
-        if (clazz
-                .annotations
-                .any { it.annotationClass in activationAnnotations }
-        ) {
+        if (filters.any { it.decide(clazz) }) {
             initMockServer()
         }
         return null
@@ -53,4 +49,18 @@ class MockServerExtension<A : Annotation>(private val activationAnnotations: Col
             System.setProperty("MOCK_SERVER_PORT", clientAndServer!!.port.toString())
         }
     }
+}
+
+/**
+ * Creates a [MockServerExtension] with the specified predicates for annotation [A].
+ *
+ * @param predicates The predicates used to filter the annotations.
+ * @return The [MockServerExtension] object.
+ */
+inline fun <reified A : Annotation> MockServerExtension(vararg predicates: (A) -> Boolean): MockServerExtension {
+    val filters = when {
+        predicates.isEmpty() -> ANY_EXTENSION_FILTERS
+        else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
+    }
+    return MockServerExtension(filters)
 }

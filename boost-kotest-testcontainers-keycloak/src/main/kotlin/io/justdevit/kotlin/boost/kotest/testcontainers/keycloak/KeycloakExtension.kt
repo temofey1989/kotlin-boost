@@ -2,6 +2,9 @@ package io.justdevit.kotlin.boost.kotest.testcontainers.keycloak
 
 import dasniko.testcontainers.keycloak.KeycloakContainer
 import io.justdevit.kotlin.boost.extension.runIf
+import io.justdevit.kotlin.boost.kotest.ANY_EXTENSION_FILTERS
+import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
+import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.kotest.core.spec.Spec
 import org.keycloak.admin.client.Keycloak
@@ -25,19 +28,12 @@ private val LOCK: Lock = ReentrantLock()
  * The `KeycloakExtension` class is an implementation of the `ExternalToolExtension` interface.
  * It provides methods to instantiate a Keycloak container, mount it, and perform operations after the project.
  */
-class KeycloakExtension<A : Annotation>(private val activationAnnotations: Collection<KClass<A>> = emptySet()) : ExternalToolExtension<KeycloakContainer, Keycloak> {
+class KeycloakExtension(private val filters: Collection<ExtensionFilter> = ANY_EXTENSION_FILTERS) : ExternalToolExtension<KeycloakContainer, Keycloak> {
 
-    companion object {
-        val INSTANCE: KeycloakExtension<*> by lazy { KeycloakExtension<Annotation>() }
-    }
-
-    constructor(vararg activationAnnotations: KClass<A>) : this(activationAnnotations.toSet())
+    constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
 
     override fun <T : Spec> instantiate(clazz: KClass<T>): Spec? {
-        if (clazz
-                .annotations
-                .any { it.annotationClass in activationAnnotations }
-        ) {
+        if (filters.any { it.decide(clazz) }) {
             startContainer()
         }
         return null
@@ -89,4 +85,18 @@ class KeycloakExtension<A : Annotation>(private val activationAnnotations: Colle
         val fullPrefix = if (prefix.isBlank()) "" else "${prefix}_"
         System.setProperty("${fullPrefix}KEYCLOAK_ISSUER_URI", "${keycloakContainer!!.authServerUrl}/realms/$realm")
     }
+}
+
+/**
+ * Creates a [KeycloakExtension] with the specified predicates for annotation [A].
+ *
+ * @param predicates The predicates used to filter the annotations.
+ * @return The [KeycloakExtension] object.
+ */
+inline fun <reified A : Annotation> KeycloakExtension(vararg predicates: (A) -> Boolean): KeycloakExtension {
+    val filters = when {
+        predicates.isEmpty() -> ANY_EXTENSION_FILTERS
+        else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
+    }
+    return KeycloakExtension(filters)
 }

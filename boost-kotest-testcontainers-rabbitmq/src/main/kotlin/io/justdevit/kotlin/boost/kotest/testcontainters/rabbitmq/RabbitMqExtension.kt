@@ -1,6 +1,9 @@
 package io.justdevit.kotlin.boost.kotest.testcontainters.rabbitmq
 
 import io.justdevit.kotlin.boost.extension.runIf
+import io.justdevit.kotlin.boost.kotest.ANY_EXTENSION_FILTERS
+import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
+import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.kotest.core.spec.Spec
 import org.testcontainers.containers.RabbitMQContainer
@@ -16,19 +19,12 @@ private val LOCK: Lock = ReentrantLock()
  * The `RabbitMqExtension` class is an implementation of the `ExternalToolExtension` interface that represents an extension for running RabbitMQ containers.
  * It provides functionality to start and stop a RabbitMQ container as needed.
  */
-class RabbitMqExtension<A : Annotation>(private val activationAnnotations: Collection<KClass<A>> = emptySet()) : ExternalToolExtension<RabbitMQContainer, RabbitMQContainer> {
+class RabbitMqExtension(private val filters: Collection<ExtensionFilter> = ANY_EXTENSION_FILTERS) : ExternalToolExtension<RabbitMQContainer, RabbitMQContainer> {
 
-    companion object {
-        val INSTANCE: RabbitMqExtension<*> by lazy { RabbitMqExtension<Annotation>() }
-    }
-
-    constructor(vararg activationAnnotations: KClass<A>) : this(activationAnnotations.toSet())
+    constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
 
     override fun <T : Spec> instantiate(clazz: KClass<T>): Spec? {
-        if (clazz
-                .annotations
-                .any { it.annotationClass in activationAnnotations }
-        ) {
+        if (filters.any { it.decide(clazz) }) {
             startContainer()
         }
         return null
@@ -56,4 +52,18 @@ class RabbitMqExtension<A : Annotation>(private val activationAnnotations: Colle
                 }
         }
     }
+}
+
+/**
+ * Creates a [RabbitMqExtension] with the specified predicates for annotation [A].
+ *
+ * @param predicates The predicates used to filter the annotations.
+ * @return The [RabbitMqExtension] object.
+ */
+inline fun <reified A : Annotation> RabbitMqExtension(vararg predicates: (A) -> Boolean): RabbitMqExtension {
+    val filters = when {
+        predicates.isEmpty() -> ANY_EXTENSION_FILTERS
+        else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
+    }
+    return RabbitMqExtension(filters)
 }
