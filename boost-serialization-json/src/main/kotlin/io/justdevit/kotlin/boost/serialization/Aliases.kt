@@ -45,3 +45,7 @@ typealias ZonedDateTime =
 typealias Duration =
     @Serializable(with = DurationSerializer::class)
     java.time.Duration
+
+typealias Period =
+    @Serializable(with = PeriodSerializer::class)
+    java.time.Period
