@@ -100,3 +100,11 @@ inline fun <reified A : Annotation> KeycloakExtension(vararg predicates: (A) -> 
     }
     return KeycloakExtension(filters)
 }
+
+/**
+ * Creates a [KeycloakExtension] with the specified predicate for annotation [A].
+ *
+ * @param predicate The predicate used to filter the annotations.
+ * @return The [KeycloakExtension] object.
+ */
+inline fun <reified A : Annotation> KeycloakExtension(noinline predicate: (A) -> Boolean) = KeycloakExtension<A>(*arrayOf(predicate))

@@ -64,3 +64,11 @@ inline fun <reified A : Annotation> MockServerExtension(vararg predicates: (A) -
     }
     return MockServerExtension(filters)
 }
+
+/**
+ * Creates a [MockServerExtension] with the specified predicate for annotation [A].
+ *
+ * @param predicate The predicate used to filter the annotations.
+ * @return The [MockServerExtension] object.
+ */
+inline fun <reified A : Annotation> MockServerExtension(noinline predicate: (A) -> Boolean) = MockServerExtension<A>(*arrayOf(predicate))

@@ -67,3 +67,11 @@ inline fun <reified A : Annotation> RabbitMqExtension(vararg predicates: (A) -> 
     }
     return RabbitMqExtension(filters)
 }
+
+/**
+ * Creates a [RabbitMqExtension] with the specified predicate for annotation [A].
+ *
+ * @param predicate The predicate used to filter the annotations.
+ * @return The [RabbitMqExtension] object.
+ */
+inline fun <reified A : Annotation> RabbitMqExtension(noinline predicate: (A) -> Boolean) = RabbitMqExtension<A>(*arrayOf(predicate))

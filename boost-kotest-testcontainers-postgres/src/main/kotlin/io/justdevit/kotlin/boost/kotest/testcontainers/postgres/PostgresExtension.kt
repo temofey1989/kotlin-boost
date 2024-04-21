@@ -70,3 +70,11 @@ inline fun <reified A : Annotation> PostgresExtension(vararg predicates: (A) -> 
     }
     return PostgresExtension(filters)
 }
+
+/**
+ * Creates a [PostgresExtension] with the specified predicate for annotation [A].
+ *
+ * @param predicate The predicate used to filter the annotations.
+ * @return The [PostgresExtension] object.
+ */
+inline fun <reified A : Annotation> PostgresExtension(noinline predicate: (A) -> Boolean) = PostgresExtension<A>(*arrayOf(predicate))
