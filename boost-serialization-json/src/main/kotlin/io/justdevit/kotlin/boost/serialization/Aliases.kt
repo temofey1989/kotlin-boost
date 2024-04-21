@@ -30,6 +30,10 @@ typealias OffsetDateTime =
     @Serializable(with = OffsetDateTimeSerializer::class)
     java.time.OffsetDateTime
 
+typealias Instant =
+    @Serializable(with = InstantSerializer::class)
+    java.time.Instant
+
 typealias ZoneIdTime =
     @Serializable(with = ZoneIdSerializer::class)
     java.time.ZoneId
