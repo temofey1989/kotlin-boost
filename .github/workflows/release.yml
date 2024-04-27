@@ -13,10 +13,10 @@ jobs:
         with:
           java-version: 17
           distribution: 'liberica'
-      - uses: gradle/gradle-build-action@v3
+      - uses: gradle/actions/setup-gradle@v3
         id: release-libs
         with:
-          arguments: -Pversion=${{github.event.release.name}} build publishToSonatype closeAndReleaseSonatypeStagingRepository :boost-bom:publishToSonatype :boost-bom:closeAndReleaseSonatypeStagingRepository
+          arguments: build publishToSonatype closeAndReleaseSonatypeStagingRepository :boost-bom:publishToSonatype :boost-bom:closeAndReleaseSonatypeStagingRepository
         env:
           PROJECT_DESCRIPTION: ${{github.event.repository.description}}
           LICENSE_NAME: The Apache License, Version 2.0
