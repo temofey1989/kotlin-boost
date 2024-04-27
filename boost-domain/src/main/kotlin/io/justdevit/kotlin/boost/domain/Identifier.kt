@@ -16,12 +16,12 @@ import kotlinx.serialization.descriptors.buildSerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
-interface Identifier
+interface Identifier<T> {
+    val value: T
+}
 
 @Serializable
-abstract class CompositeIdentifier<T, U> : Identifier {
-
-    abstract val value: T
+abstract class CompositeIdentifier<T, U> : Identifier<T> {
 
     @Contextual
     var internal: InternalIdentifier<U> = UndefinedInternalIdentifier()
