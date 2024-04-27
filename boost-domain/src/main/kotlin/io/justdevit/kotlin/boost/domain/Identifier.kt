@@ -43,25 +43,41 @@ class UndefinedInternalIdentifier<T> : InternalIdentifier<T> {
 @SerialName("UUID")
 data class UuidInternalIdentifier(override val value: UUID) : InternalIdentifier<UUID>
 
-fun UUID.toInternalIdentifier() = UuidInternalIdentifier(this)
+fun UUID?.toInternalIdentifier() =
+    when (this) {
+        null -> UndefinedInternalIdentifier()
+        else -> UuidInternalIdentifier(this)
+    }
 
 @Serializable
 @SerialName("STRING")
 data class StringInternalIdentifier(override val value: String) : InternalIdentifier<String>
 
-fun String.toInternalIdentifier() = StringInternalIdentifier(this)
+fun String?.toInternalIdentifier() =
+    when (this) {
+        null -> UndefinedInternalIdentifier()
+        else -> StringInternalIdentifier(this)
+    }
 
 @Serializable
 @SerialName("LONG")
 data class LongInternalIdentifier(override val value: Long) : InternalIdentifier<Long>
 
-fun Long.toInternalIdentifier() = LongInternalIdentifier(this)
+fun Long?.toInternalIdentifier() =
+    when (this) {
+        null -> UndefinedInternalIdentifier()
+        else -> LongInternalIdentifier(this)
+    }
 
 @Serializable
 @SerialName("INT")
 data class IntInternalIdentifier(override val value: Int) : InternalIdentifier<Int>
 
-fun Int.toInternalIdentifier() = IntInternalIdentifier(this)
+fun Int?.toInternalIdentifier() =
+    when (this) {
+        null -> UndefinedInternalIdentifier()
+        else -> IntInternalIdentifier(this)
+    }
 
 @Serializable(LazyInternalIdentifierSerializer::class)
 internal class LazyInternalIdentifier : InternalIdentifier<Any> {
