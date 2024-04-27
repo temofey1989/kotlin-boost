@@ -11,11 +11,11 @@ jobs:
       - uses: actions/checkout@v2
       - uses: actions/setup-java@v1
         with:
-          java-version: 17
+          java-version: 21
       - uses: gradle/gradle-build-action@v2
         id: gradle
         with:
-          arguments: -Pversion=${{github.event.release.name}} build publishToSonatype closeAndReleaseSonatypeStagingRepository
+          arguments: build publishToSonatype closeSonatypeStagingRepository :boost-bom:publishToSonatype :boost-bom:closeSonatypeStagingRepository
         env:
           PROJECT_DESCRIPTION: ${{github.event.repository.description}}
           LICENSE_NAME: The Apache License, Version 2.0

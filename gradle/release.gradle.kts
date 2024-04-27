@@ -11,28 +11,28 @@ buildscript {
 
 // --- PROPERTIES --------------------------------------------------------- #
 
-fun property(name: String, defaultValue: String = ""): String {
+fun prop(name: String, defaultValue: String = ""): String {
     val envName = name.replace(".", "_").uppercase()
     return System.getenv(envName) ?: project.findProperty(name)?.toString() ?: defaultValue
 }
 
-val projectDescription: String by lazy { property("project.description", project.description ?: "") }
+val projectDescription: String by lazy { prop("project.description", project.description ?: "") }
 
-val scmUrl: String by lazy { property("scm.url") }
+val scmUrl: String by lazy { prop("scm.url") }
 
-val scmConnection: String by lazy { property("scm.connection") }
+val scmConnection: String by lazy { prop("scm.connection") }
 
-val scmDeveloperConnection: String by lazy { property("scm.developer.connection") }
+val scmDeveloperConnection: String by lazy { prop("scm.developer.connection") }
 
-val licenseName: String by lazy { property("license.name") }
+val licenseName: String by lazy { prop("license.name") }
 
-val licenseUrl: String by lazy { property("license.url") }
+val licenseUrl: String by lazy { prop("license.url") }
 
-val developerId: String by lazy { property("developer.id") }
+val developerId: String by lazy { prop("developer.id") }
 
-val developerName: String by lazy { property("developer.name") }
+val developerName: String by lazy { prop("developer.name") }
 
-val developerEmail: String by lazy { property("developer.email") }
+val developerEmail: String by lazy { prop("developer.email") }
 
 // ------------------------------------------------------------------------ #
 
