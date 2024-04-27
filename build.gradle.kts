@@ -39,7 +39,7 @@ subprojects {
         testImplementation("io.mockk:mockk:$mockkVersion")
     }
 
-    java.sourceCompatibility = JavaVersion.VERSION_21
+    java.sourceCompatibility = JavaVersion.VERSION_17
 
     tasks {
         formatKotlin {
