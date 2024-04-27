@@ -15,7 +15,7 @@ jobs:
       - uses: gradle/gradle-build-action@v2
         id: gradle
         with:
-          arguments: build publishToSonatype closeSonatypeStagingRepository :boost-bom:publishToSonatype :boost-bom:closeSonatypeStagingRepository
+          arguments: build publishToSonatype closeAndReleaseSonatypeStagingRepository :boost-bom:publishToSonatype :boost-bom:closeAndReleaseSonatypeStagingRepository
         env:
           PROJECT_DESCRIPTION: ${{github.event.repository.description}}
           LICENSE_NAME: The Apache License, Version 2.0
