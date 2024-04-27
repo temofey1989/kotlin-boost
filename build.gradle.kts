@@ -23,6 +23,7 @@ allprojects {
 subprojects {
 
     apply(plugin = "org.jetbrains.kotlin.jvm")
+    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
     apply(plugin = "org.jmailen.kotlinter")
 
     val kotestVersion: String by project
