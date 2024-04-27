@@ -1,3 +1,5 @@
+import java.net.HttpURLConnection
+import java.net.URI
 import java.time.Duration
 
 plugins {
@@ -46,48 +48,80 @@ val developerName: String by lazy { prop("developer.name") }
 
 val developerEmail: String by lazy { prop("developer.email") }
 
-publishing {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["javaPlatform"])
-            pom {
-                name.set("${project.group}:${project.name}")
-                description.set(projectDescription)
-                url.set(scmUrl)
-                licenses {
-                    license {
-                        name.set(licenseName)
-                        url.set(licenseUrl)
-                    }
-                }
-                developers {
-                    developer {
-                        id.set(developerId)
-                        name.set(developerName)
-                        email.set(developerEmail)
-                    }
-                }
-                scm {
-                    url.set(scmUrl)
-                    connection.set(scmConnection)
-                    developerConnection.set(scmDeveloperConnection)
-                }
-            }
-            suppressPomMetadataWarningsFor("runtimeElements")
-        }
+fun alreadyPublished(): Boolean {
+    val group = project.group
+        .toString()
+        .trim()
+    val artifact = project.name.trim()
+    val version = (
+        gradle.parent
+            ?.rootProject
+            ?.version ?: project.version
+    ).toString().trim()
+    if (version.isBlank()) {
+        throw IllegalStateException("No version found for BOM.")
+    }
+    val extension = "pom"
+    val baseUrl = "https://repo1.maven.org/maven2"
+    val url = "$baseUrl/${group.replace('.', '/')}/$artifact/$version/$artifact-$version.$extension"
+
+    val artifactUrl = URI.create(url).toURL()
+    val connection = artifactUrl.openConnection() as HttpURLConnection
+    connection.requestMethod = "HEAD"
+    connection.connect()
+    val responseCode = connection.responseCode
+    connection.disconnect()
+
+    return (responseCode == HttpURLConnection.HTTP_OK).also {
+        println("INFO: Artifact '$group:$artifact:$version' existence: $it")
     }
 }
 
-configure<SigningExtension> {
-    val signingKeyId: String? by project
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+if (!alreadyPublished()) {
+    println("INFO: Applying Maven Publication for project: ${project.name}")
 
-    val publishing = project.extensions["publishing"] as PublishingExtension
-    sign(publishing.publications["maven"])
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["javaPlatform"])
+                pom {
+                    name.set("${project.group}:${project.name}")
+                    description.set(projectDescription)
+                    url.set(scmUrl)
+                    licenses {
+                        license {
+                            name.set(licenseName)
+                            url.set(licenseUrl)
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set(developerId)
+                            name.set(developerName)
+                            email.set(developerEmail)
+                        }
+                    }
+                    scm {
+                        url.set(scmUrl)
+                        connection.set(scmConnection)
+                        developerConnection.set(scmDeveloperConnection)
+                    }
+                }
+                suppressPomMetadataWarningsFor("runtimeElements")
+            }
+        }
+    }
+
+    configure<SigningExtension> {
+        val signingKeyId: String? by project
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+
+        val publishing = project.extensions["publishing"] as PublishingExtension
+        sign(publishing.publications["maven"])
+    }
 }
-
 // Should be moved to release.gradle.kts
 // See: https://github.com/gradle-nexus/publish-plugin/issues/81
 // See: https://github.com/gradle-nexus/publish-plugin/issues/84

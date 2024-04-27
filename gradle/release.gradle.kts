@@ -1,3 +1,6 @@
+import java.net.HttpURLConnection
+import java.net.URI
+
 buildscript {
     repositories {
         maven {
@@ -36,53 +39,83 @@ val developerEmail: String by lazy { prop("developer.email") }
 
 // ------------------------------------------------------------------------ #
 
-apply(plugin = "org.gradle.java-library")
-apply(plugin = "org.gradle.maven-publish")
-apply(plugin = "org.gradle.signing")
+fun alreadyPublished(): Boolean {
+    val group = project.group
+        .toString()
+        .trim()
+    val artifact = project.name.trim()
+    val version = project.version
+        .toString()
+        .trim()
+    val extension = "jar"
+    val baseUrl = "https://repo1.maven.org/maven2"
+    val url = "$baseUrl/${group.replace('.', '/')}/$artifact/$version/$artifact-$version.$extension"
 
-configure<JavaPluginExtension> {
-    withSourcesJar()
-    withJavadocJar()
-}
+    val artifactUrl = URI.create(url).toURL()
+    val connection = artifactUrl.openConnection() as HttpURLConnection
+    connection.requestMethod = "HEAD"
+    connection.connect()
+    val responseCode = connection.responseCode
+    connection.disconnect()
 
-configure<PublishingExtension> {
-    publications {
-        create<MavenPublication>("maven") {
-            from(components["java"])
-            pom {
-                name.set("${project.group}:${project.name}")
-                description.set(projectDescription)
-                url.set(scmUrl)
-                licenses {
-                    license {
-                        name.set(licenseName)
-                        url.set(licenseUrl)
-                    }
-                }
-                developers {
-                    developer {
-                        id.set(developerId)
-                        name.set(developerName)
-                        email.set(developerEmail)
-                    }
-                }
-                scm {
-                    url.set(scmUrl)
-                    connection.set(scmConnection)
-                    developerConnection.set(scmDeveloperConnection)
-                }
-            }
-            suppressPomMetadataWarningsFor("runtimeElements")
-        }
+    return (responseCode == HttpURLConnection.HTTP_OK).also {
+        println("INFO: Artifact '$group:$artifact:$version' existence: $it")
     }
 }
 
-configure<SigningExtension> {
-    val signingKeyId: String? by project
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+// ------------------------------------------------------------------------ #
 
-    val publishing = project.extensions["publishing"] as PublishingExtension
-    sign(publishing.publications["maven"])
+if (!alreadyPublished()) {
+    println("INFO: Applying Maven Publication for project: ${project.name}")
+
+    apply(plugin = "org.gradle.java-library")
+    apply(plugin = "org.gradle.maven-publish")
+    apply(plugin = "org.gradle.signing")
+
+    configure<JavaPluginExtension> {
+        withSourcesJar()
+        withJavadocJar()
+    }
+
+    configure<PublishingExtension> {
+        publications {
+            create<MavenPublication>("maven") {
+                from(components["java"])
+                pom {
+                    name.set("${project.group}:${project.name}")
+                    description.set(projectDescription)
+                    url.set(scmUrl)
+                    licenses {
+                        license {
+                            name.set(licenseName)
+                            url.set(licenseUrl)
+                        }
+                    }
+                    developers {
+                        developer {
+                            id.set(developerId)
+                            name.set(developerName)
+                            email.set(developerEmail)
+                        }
+                    }
+                    scm {
+                        url.set(scmUrl)
+                        connection.set(scmConnection)
+                        developerConnection.set(scmDeveloperConnection)
+                    }
+                }
+                suppressPomMetadataWarningsFor("runtimeElements")
+            }
+        }
+    }
+
+    configure<SigningExtension> {
+        val signingKeyId: String? by project
+        val signingKey: String? by project
+        val signingPassword: String? by project
+        useInMemoryPgpKeys(signingKeyId, signingKey, signingPassword)
+
+        val publishing = project.extensions["publishing"] as PublishingExtension
+        sign(publishing.publications["maven"])
+    }
 }
