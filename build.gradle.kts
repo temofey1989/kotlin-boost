@@ -4,10 +4,12 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
 import java.time.Duration
 
 plugins {
-    kotlin("jvm") version "1.9.22"
-    kotlin("plugin.serialization") version "1.9.22"
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0-rc-2"
+    kotlin("jvm") version "1.9.23"
+    kotlin("plugin.serialization") version "1.9.23"
     id("org.jmailen.kotlinter") version "4.1.1"
+    `maven-publish`
+    signing
+    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 allprojects {
@@ -36,7 +38,7 @@ subprojects {
         testImplementation("io.mockk:mockk:$mockkVersion")
     }
 
-    java.sourceCompatibility = JavaVersion.VERSION_17
+    java.sourceCompatibility = JavaVersion.VERSION_21
 
     tasks {
         formatKotlin {
@@ -68,7 +70,19 @@ subprojects {
         }
     }
 
-    apply(from = "${rootProject.projectDir.path}/release.gradle.kts")
+    apply(from = "${rootProject.projectDir.path}/gradle/release.gradle.kts")
+}
+
+tasks {
+    named("clean") {
+        dependsOn(gradle.includedBuild("boost-bom").task(":clean"))
+    }
+    named("build") {
+        dependsOn(gradle.includedBuild("boost-bom").task(":build"))
+    }
+    named("publishToMavenLocal") {
+        dependsOn(gradle.includedBuild("boost-bom").task(":publishToMavenLocal"))
+    }
 }
 
 // Should be moved to release.gradle.kts
