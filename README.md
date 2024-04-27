@@ -1,5 +1,5 @@
 ![example event parameter](https://github.com/temofey1989/kotlin-boost/actions/workflows/build.yml/badge.svg?branch=main)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=temofey1989_kotlin-boost&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=temofey1989_kotlin-boost)
+[![Code Quality](https://github.com/temofey1989/kotlin-boost/actions/workflows/code-quality.yml/badge.svg)](https://github.com/temofey1989/kotlin-boost/actions/workflows/code-quality.yml)
 [![GitHub license](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](https://www.apache.org/licenses/LICENSE-2.0)
 
 # Overview
@@ -9,16 +9,19 @@ Kotlin Boost is a set of libraries which can be useful for startup of your proje
 # Table of Contents
 
 <!-- TOC -->
+* [Dependency Management](#dependency-management)
+    * [Maven](#maven)
+    * [Gradle (.kts)](#gradle-kts)
 * [Modules](#modules)
-  * [`Boost Shared`](#boost-shared)
+  * [`Boost Domain`](#boost-domain)
     * [Configuration](#configuration)
-      * [Maven](#maven)
-      * [Gradle (.kts)](#gradle-kts)
+      * [Maven](#maven-1)
+      * [Gradle (.kts)](#gradle-kts-1)
     * [Usage](#usage)
   * [`Boost Serialization JSON`](#boost-serialization-json)
     * [Configuration](#configuration-1)
-      * [Maven](#maven-1)
-      * [Gradle (.kts)](#gradle-kts-1)
+      * [Maven](#maven-2)
+      * [Gradle (.kts)](#gradle-kts-2)
     * [Usage](#usage-1)
       * [Preconfigured `JSON` constant](#preconfigured-json-constant)
   * [`Boost Logging Core`](#boost-logging-core)
@@ -26,45 +29,79 @@ Kotlin Boost is a set of libraries which can be useful for startup of your proje
     * [Usage](#usage-2)
   * [`Boost Logging SLF4J`](#boost-logging-slf4j)
     * [Configuration](#configuration-2)
-      * [Maven](#maven-2)
-      * [Gradle (.kts)](#gradle-kts-2)
-  * [`Boost Kotest`](#boost-kotest)
-    * [Configuration](#configuration-3)
       * [Maven](#maven-3)
       * [Gradle (.kts)](#gradle-kts-3)
-  * [`Boost Kotest MockServer`](#boost-kotest-mockserver)
-    * [Configuration](#configuration-4)
+  * [`Boost Kotest`](#boost-kotest)
+    * [Configuration](#configuration-3)
       * [Maven](#maven-4)
       * [Gradle (.kts)](#gradle-kts-4)
+  * [`Boost Kotest MockServer`](#boost-kotest-mockserver)
+    * [Configuration](#configuration-4)
+      * [Maven](#maven-5)
+      * [Gradle (.kts)](#gradle-kts-5)
     * [Usage](#usage-3)
   * [`Boost Kotest TestContainers`](#boost-kotest-testcontainers)
     * [Configuration](#configuration-5)
-      * [Maven](#maven-5)
-      * [Gradle (.kts)](#gradle-kts-5)
+      * [Maven](#maven-6)
+      * [Gradle (.kts)](#gradle-kts-6)
     * [Usage](#usage-4)
   * [`Boost Kotest TestContainers Keycloak`](#boost-kotest-testcontainers-keycloak)
     * [Configuration](#configuration-6)
-      * [Maven](#maven-6)
-      * [Gradle (.kts)](#gradle-kts-6)
+      * [Maven](#maven-7)
+      * [Gradle (.kts)](#gradle-kts-7)
     * [Usage](#usage-5)
   * [`Boost Kotest TestContainers Postgres`](#boost-kotest-testcontainers-postgres)
     * [Configuration](#configuration-7)
-      * [Maven](#maven-7)
-      * [Gradle (.kts)](#gradle-kts-7)
+      * [Maven](#maven-8)
+      * [Gradle (.kts)](#gradle-kts-8)
     * [Usage](#usage-6)
   * [`Boost Kotest TestContainers RabbitMQ`](#boost-kotest-testcontainers-rabbitmq)
     * [Configuration](#configuration-8)
-      * [Maven](#maven-8)
-      * [Gradle (.kts)](#gradle-kts-8)
+      * [Maven](#maven-9)
+      * [Gradle (.kts)](#gradle-kts-9)
     * [Usage](#usage-7)
+  * [`Boost Utils`](#boost-utils)
+    * [Configuration](#configuration-9)
+      * [Maven](#maven-10)
+      * [Gradle (.kts)](#gradle-kts-10)
+    * [Usage](#usage-8)
 <!-- TOC -->
+
+---
+
+# Dependency Management
+
+Use BOM dependency to manage the Kotlin Boost versions.
+
+### Maven
+
+```xml
+<dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>io.justdevit.kotlin</groupId>
+      <artifactId>boost-bom</artifactId>
+      <version>${kotlin-boost.version}</version>
+      <type>pom</type>
+      <scope>import</scope>
+    </dependency>
+  </dependencies>
+</dependencyManagement>
+```
+
+### Gradle (.kts)
+
+```kotlin
+implementation(platform("io.justdevit.kotlin:boost-bom:$kotlinBoostVersion"))
+```
+
+---
 
 # Modules
 
-## `Boost Shared`
+## `Boost Domain`
 
-The module has a set of extensions for the core classes like `String`, `Collections`, `Boolean` and others.  
-This extensions can bring some boost to your code to be more clean and readable.
+The module has a set of classes which is useful for DDD.
 
 ### Configuration
 
@@ -74,26 +111,34 @@ This extensions can bring some boost to your code to be more clean and readable.
 
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
-  <artifactId>boost-shared</artifactId>
-  <version>${kotlin-boost.version}</version>
+  <artifactId>boost-domain</artifactId>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-shared:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-domain")
 ```
 
 ### Usage
 
-The IntelliJ IDEA will suggest you useful function for your usecase.
+**Classes:**
 
-**Constants:**
-
-* `ISO8601_FORMATTER`
-* `EUROPEAN_DATE_FORMATTER`
-* `EUROPEAN_DATE_TIME_FORMATTER`
+* `Identity` - A marker class for your identity classes.
+  ```kotlin
+  @Serializable
+  data class UserId(override val value: UUID) : Identity<UUID>
+  ```
+* `CompositeIdentity` - class represents a 
+  ```kotlin
+  @Serializable
+  data class UserId(override val value: UUID) : CompsiteIdentity<UUID, Long>()
+  
+  val id = UserId(uuid).apply {
+      internal = lazyInternalIdentifier { repository.getIdByPublicId(uuid) }
+  }
+  ```
 
 ---
 
@@ -111,14 +156,13 @@ and extension functions to make your work with this framework even easier.
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-serialization-json</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-serialization-json:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-serialization-json")
 ```
 
 ### Usage
@@ -274,14 +318,13 @@ The module is implementation of the API of `Boost Logging Core` based on Slf4J f
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-logging-slf4j</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-logging-slf4j:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-logging-slf4j")
 ```
 
 ---
@@ -299,14 +342,13 @@ The module is focused on perform writing test using [Kotest](https://kotest.io/)
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-kotest</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-kotest:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-kotest")
 ```
 
 ---
@@ -324,14 +366,13 @@ The module provides a Kotest extension to simplifies Rest API mocking for integr
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-kotest-mockserver</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-kotest-mockserver:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-kotest-mockserver")
 ```
 
 ### Usage
@@ -368,14 +409,13 @@ The module provides API for all TestContainers modules. Also it provides Stubbin
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-kotest-testcontainers</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-kotest-testcontainers:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-kotest-testcontainers")
 ```
 
 ### Usage
@@ -412,14 +452,13 @@ The module provides a Kotest extension to run Keycloak with TestContainers frame
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-kotest-testcontainers-keycloak</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-kotest-testcontainers-keycloak:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-kotest-testcontainers-keycloak")
 ```
 
 ### Usage
@@ -429,7 +468,7 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-keycloak:$kotlin
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              KeycloakExtension(MicronautTest::class),
+              KeycloakExtension<MicronautTest> { "keycloak" in it.enveronments },
           )
   }
   ```
@@ -456,14 +495,13 @@ The module provides a Kotest extension to run Postgres Database Server with Test
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-kotest-testcontainers-postgres</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-kotest-testcontainers-postgres:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-kotest-testcontainers-postgres")
 ```
 
 ### Usage
@@ -473,7 +511,7 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-postgres:$kotlin
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              PostgresExtension(MicronautTest::class),
+              PostgresExtension<MicronautTest> { "postgres" in it.environments },
           )
   }
   ```
@@ -500,14 +538,13 @@ The module provides a Kotest extension to run RabbitMQ Broker with TestContainer
 <dependency>
   <groupId>io.justdevit.kotlin</groupId>
   <artifactId>boost-kotest-testcontainers-rabbitmq</artifactId>
-  <version>${kotlin-boost.version}</version>
 </dependency>
 ```
 
 #### Gradle (.kts)
 
 ```kotlin
-implementation("io.justdevit.kotlin:boost-kotest-testcontainers-rabbitmq:$kotlinBoostVersion")
+implementation("io.justdevit.kotlin:boost-kotest-testcontainers-rabbitmq")
 ```
 
 ### Usage
@@ -517,7 +554,7 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-rabbitmq:$kotlin
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              RabbitMqExtension,
+              RabbitMqExtension<MicronautTest> { "rabbitmq" in it.environments },
           )
   }
   ```
@@ -528,4 +565,37 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-rabbitmq:$kotlin
       ...
   })
   ```
+
+## `Boost Utils`
+
+The module has a set of extensions for the core classes like `String`, `Collections`, `Boolean` and others.  
+This extensions can bring some boost to your code to be more clean and readable.
+
+### Configuration
+
+#### Maven
+
+```xml
+
+<dependency>
+  <groupId>io.justdevit.kotlin</groupId>
+  <artifactId>boost-utils</artifactId>
+</dependency>
+```
+
+#### Gradle (.kts)
+
+```kotlin
+implementation("io.justdevit.kotlin:boost-utils")
+```
+
+### Usage
+
+The IntelliJ IDEA will suggest you useful function for your usecase.
+
+**Constants:**
+
+* `ISO8601_FORMATTER`
+* `EUROPEAN_DATE_FORMATTER`
+* `EUROPEAN_DATE_TIME_FORMATTER`
 
