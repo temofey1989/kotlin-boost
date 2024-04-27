@@ -8,11 +8,11 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-java@v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           java-version: 17
-      - uses: gradle/gradle-build-action@v2
+      - uses: gradle/gradle-build-action@v3
         id: release-libs
         with:
           arguments: -Pversion=${{github.event.release.name}} build publishToSonatype closeAndReleaseSonatypeStagingRepository :boost-bom:publishToSonatype :boost-bom:closeAndReleaseSonatypeStagingRepository
