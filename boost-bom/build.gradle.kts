@@ -83,7 +83,9 @@ fun alreadyPublished(): Boolean {
     }
 }
 
-if (!alreadyPublished()) {
+val ci: Boolean by lazy { System.getenv("CI")?.toBoolean() ?: false }
+
+if (ci && !alreadyPublished()) {
     println("INFO: Applying Maven Publication for project: ${project.name}")
 
     publishing {

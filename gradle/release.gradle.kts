@@ -63,9 +63,11 @@ fun alreadyPublished(): Boolean {
     }
 }
 
+val ci: Boolean by lazy { System.getenv("CI")?.toBoolean() ?: false }
+
 // ------------------------------------------------------------------------ #
 
-if (!alreadyPublished()) {
+if (ci && !alreadyPublished()) {
     println("INFO: Applying Maven Publication for project: ${project.name}")
 
     apply(plugin = "org.gradle.java-library")
