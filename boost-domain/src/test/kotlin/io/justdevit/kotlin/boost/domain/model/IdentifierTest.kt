@@ -1,4 +1,4 @@
-package io.justdevit.kotlin.boost.domain
+package io.justdevit.kotlin.boost.domain.model
 
 import io.justdevit.kotlin.boost.serialization.UUID
 import io.justdevit.kotlin.boost.serialization.json.JSON
