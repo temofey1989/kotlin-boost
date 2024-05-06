@@ -1,4 +1,4 @@
-package io.justdevit.kotlin.boost.extension
+package io.justdevit.kotlin.boost.base64
 
 import java.util.Base64
 

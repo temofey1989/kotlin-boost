@@ -1,7 +1,7 @@
 package io.justdevit.kotlin.boost.domain.model
 
-import io.justdevit.kotlin.boost.extension.decode
-import io.justdevit.kotlin.boost.extension.encode
+import io.justdevit.kotlin.boost.base64.decode
+import io.justdevit.kotlin.boost.base64.encode
 
 /**
  * Represents a cursor used for pagination.

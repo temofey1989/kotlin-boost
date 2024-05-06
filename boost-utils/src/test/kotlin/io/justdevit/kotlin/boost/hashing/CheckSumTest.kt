@@ -1,6 +1,6 @@
 package io.justdevit.kotlin.boost.hashing
 
-import io.justdevit.kotlin.boost.extension.encode
+import io.justdevit.kotlin.boost.base64.encode
 import io.justdevit.kotlin.boost.extension.randomString
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.shouldBe
@@ -16,7 +16,7 @@ class CheckSumTest :
                 val checksum = text.to<Sha256Checksum>()
 
                 with(checksum) {
-                    algorithm shouldBe SHA256_CHECKSUM_ALGORITHM
+                    algorithm shouldBe SHA256_ALGORITHM
                     asString() shouldStartWith "sha-256$CHECKSUM_SEPARATOR"
                 }
             }

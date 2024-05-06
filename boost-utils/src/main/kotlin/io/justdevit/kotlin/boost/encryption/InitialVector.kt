@@ -1,7 +1,7 @@
 package io.justdevit.kotlin.boost.encryption
 
-import io.justdevit.kotlin.boost.extension.decode
-import io.justdevit.kotlin.boost.extension.isBase64
+import io.justdevit.kotlin.boost.base64.decode
+import io.justdevit.kotlin.boost.base64.isBase64
 import javax.crypto.spec.IvParameterSpec
 
 /**

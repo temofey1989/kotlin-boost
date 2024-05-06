@@ -1,6 +1,6 @@
 package io.justdevit.kotlin.boost.encryption
 
-import io.justdevit.kotlin.boost.extension.encodeToString
+import io.justdevit.kotlin.boost.base64.encodeToString
 
 /**
  * Represents an interface for encrypting data.
