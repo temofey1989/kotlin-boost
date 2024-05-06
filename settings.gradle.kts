@@ -6,6 +6,7 @@ include(
     "boost-kotest-mockserver",
     "boost-kotest-testcontainers",
     "boost-kotest-testcontainers-keycloak",
+    "boost-kotest-testcontainers-localstack",
     "boost-kotest-testcontainers-postgres",
     "boost-kotest-testcontainers-rabbitmq",
     "boost-logging-core",
