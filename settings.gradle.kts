@@ -1,6 +1,7 @@
 rootProject.name = "kotlin-boost"
 
 include(
+    "boost-aws-s3",
     "boost-domain",
     "boost-kotest",
     "boost-kotest-mockserver",
