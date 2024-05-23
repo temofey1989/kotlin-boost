@@ -4,8 +4,8 @@ import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
 import java.time.Duration
 
 plugins {
-    kotlin("jvm") version "1.9.23"
-    kotlin("plugin.serialization") version "1.9.23"
+    kotlin("jvm") version "2.0.0"
+    kotlin("plugin.serialization") version "2.0.0"
     id("org.jmailen.kotlinter") version "4.1.1"
     `maven-publish`
     signing

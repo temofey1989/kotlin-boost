@@ -4,6 +4,7 @@ include(
     "boost-aws-s3",
     "boost-domain",
     "boost-kotest",
+    "boost-kotest-mockk",
     "boost-kotest-mockserver",
     "boost-kotest-testcontainers",
     "boost-kotest-testcontainers-keycloak",
