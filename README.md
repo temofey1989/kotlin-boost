@@ -8,7 +8,6 @@ Kotlin Boost is a set of libraries which can be useful for startup of your proje
 
 # Table of Contents
 
-<!-- TOC -->
 * [Dependency Management](#dependency-management)
     * [Maven](#maven)
     * [Gradle (.kts)](#gradle-kts)
@@ -35,37 +34,41 @@ Kotlin Boost is a set of libraries which can be useful for startup of your proje
     * [Configuration](#configuration-3)
       * [Maven](#maven-4)
       * [Gradle (.kts)](#gradle-kts-4)
-  * [`Boost Kotest MockServer`](#boost-kotest-mockserver)
+  * [`Boost Kotest Mockk`](#boost-kotest-mockk)
     * [Configuration](#configuration-4)
       * [Maven](#maven-5)
       * [Gradle (.kts)](#gradle-kts-5)
     * [Usage](#usage-3)
-  * [`Boost Kotest TestContainers`](#boost-kotest-testcontainers)
+  * [`Boost Kotest MockServer`](#boost-kotest-mockserver)
     * [Configuration](#configuration-5)
       * [Maven](#maven-6)
       * [Gradle (.kts)](#gradle-kts-6)
     * [Usage](#usage-4)
-  * [`Boost Kotest TestContainers Keycloak`](#boost-kotest-testcontainers-keycloak)
+  * [`Boost Kotest TestContainers`](#boost-kotest-testcontainers)
     * [Configuration](#configuration-6)
       * [Maven](#maven-7)
       * [Gradle (.kts)](#gradle-kts-7)
     * [Usage](#usage-5)
-  * [`Boost Kotest TestContainers Postgres`](#boost-kotest-testcontainers-postgres)
+  * [`Boost Kotest TestContainers Keycloak`](#boost-kotest-testcontainers-keycloak)
     * [Configuration](#configuration-7)
       * [Maven](#maven-8)
       * [Gradle (.kts)](#gradle-kts-8)
     * [Usage](#usage-6)
-  * [`Boost Kotest TestContainers RabbitMQ`](#boost-kotest-testcontainers-rabbitmq)
+  * [`Boost Kotest TestContainers Postgres`](#boost-kotest-testcontainers-postgres)
     * [Configuration](#configuration-8)
       * [Maven](#maven-9)
       * [Gradle (.kts)](#gradle-kts-9)
     * [Usage](#usage-7)
-  * [`Boost Utils`](#boost-utils)
+  * [`Boost Kotest TestContainers RabbitMQ`](#boost-kotest-testcontainers-rabbitmq)
     * [Configuration](#configuration-9)
       * [Maven](#maven-10)
       * [Gradle (.kts)](#gradle-kts-10)
     * [Usage](#usage-8)
-<!-- TOC -->
+  * [`Boost Utils`](#boost-utils)
+    * [Configuration](#configuration-10)
+      * [Maven](#maven-11)
+      * [Gradle (.kts)](#gradle-kts-11)
+    * [Usage](#usage-9)
 
 ---
 
@@ -353,6 +356,49 @@ implementation("io.justdevit.kotlin:boost-kotest")
 
 ---
 
+## `Boost Kotest Mockk`
+
+The module is focused on perform writing test [Mockk Framework](https://mockk.io/).
+
+### Configuration
+
+#### Maven
+
+```xml
+
+<dependency>
+  <groupId>io.justdevit.kotlin</groupId>
+  <artifactId>boost-kotest-mockk</artifactId>
+</dependency>
+```
+
+#### Gradle (.kts)
+
+```kotlin
+implementation("io.justdevit.kotlin:boost-kotest-mockk")
+```
+
+### Usage
+
+* **Apply extension globally**
+  ```kotlin
+  object ProjectConfig : AbstractProjectConfig() {
+      override fun extensions() =
+          listOf(
+              MockkExtension,
+          )
+  }
+  ```
+* **Clear All Mocks**
+  ```kotlin
+  class MyTest : FreeSpec({
+      installMockkClearing()
+      ...
+  })
+  ```
+
+---
+
 ## `Boost Kotest MockServer`
 
 The module provides a Kotest extension to simplifies Rest API mocking for integration tests.
@@ -382,7 +428,7 @@ implementation("io.justdevit.kotlin:boost-kotest-mockserver")
   object ProjectConfig : AbstractProjectConfig() {
       override fun extensions() =
           listOf(
-              MockServerExtension(MicronautTest::class),
+              MockServerExtension<E2eTest> { MOCK_SERVER in it.profiles },
           )
   }
   ```
