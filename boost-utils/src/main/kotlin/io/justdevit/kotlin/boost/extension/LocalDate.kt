@@ -18,3 +18,12 @@ fun LocalDate.toUtcDateTime(): OffsetDateTime = atStartOfDay().atOffset(UTC)
  * @return The string representation of the [LocalDate] in European date format.
  */
 fun LocalDate.toEuropeanString(): String = format(EUROPEAN_DATE_FORMATTER)
+
+/**
+ * Checks if this [LocalDate] is between the [from] date (inclusive) and the [to] date (inclusive).
+ *
+ * @param from The start date of the range to check.
+ * @param to The end date of the range to check.
+ * @return `true` if this date is between the range (inclusive), `false` otherwise.
+ */
+fun LocalDate.isBetween(from: LocalDate, to: LocalDate) = !isBefore(from) && !isAfter(to)
