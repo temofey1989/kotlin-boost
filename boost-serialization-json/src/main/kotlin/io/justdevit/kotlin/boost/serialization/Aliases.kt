@@ -49,3 +49,7 @@ typealias Duration =
 typealias Period =
     @Serializable(with = PeriodSerializer::class)
     java.time.Period
+
+typealias URI =
+    @Serializable(with = UriSerializer::class)
+    java.net.URI
