@@ -4,6 +4,7 @@ include(
     "boost-aws-s3",
     "boost-commons",
     "boost-domain",
+    "boost-eventbus",
     "boost-kotest",
     "boost-kotest-mockk",
     "boost-kotest-mockserver",
