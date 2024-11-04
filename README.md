@@ -8,66 +8,71 @@ Kotlin Boost is a set of libraries which can be useful for startup of your proje
 
 # Table of Contents
 
+* [Table of Contents](#table-of-contents)
 * [Dependency Management](#dependency-management)
     * [Maven](#maven)
     * [Gradle (.kts)](#gradle-kts)
 * [Modules](#modules)
-  * [`Boost Domain`](#boost-domain)
+  * [`Boost Commons`](#boost-commons)
     * [Configuration](#configuration)
       * [Maven](#maven-1)
       * [Gradle (.kts)](#gradle-kts-1)
     * [Usage](#usage)
-  * [`Boost Serialization JSON`](#boost-serialization-json)
+  * [`Boost Domain`](#boost-domain)
     * [Configuration](#configuration-1)
       * [Maven](#maven-2)
       * [Gradle (.kts)](#gradle-kts-2)
     * [Usage](#usage-1)
-      * [Preconfigured `JSON` constant](#preconfigured-json-constant)
-  * [`Boost Logging Core`](#boost-logging-core)
-    * [Levels](#levels)
-    * [Usage](#usage-2)
-  * [`Boost Logging SLF4J`](#boost-logging-slf4j)
+  * [`Boost Serialization JSON`](#boost-serialization-json)
     * [Configuration](#configuration-2)
       * [Maven](#maven-3)
       * [Gradle (.kts)](#gradle-kts-3)
-  * [`Boost Kotest`](#boost-kotest)
+    * [Usage](#usage-2)
+      * [Preconfigured `JSON` constant](#preconfigured-json-constant)
+  * [`Boost Logging Core`](#boost-logging-core)
+    * [Levels](#levels)
+    * [Usage](#usage-3)
+  * [`Boost Logging SLF4J`](#boost-logging-slf4j)
     * [Configuration](#configuration-3)
       * [Maven](#maven-4)
       * [Gradle (.kts)](#gradle-kts-4)
-  * [`Boost Kotest Mockk`](#boost-kotest-mockk)
+  * [`Boost EventBus`](#boost-eventbus)
     * [Configuration](#configuration-4)
       * [Maven](#maven-5)
       * [Gradle (.kts)](#gradle-kts-5)
-    * [Usage](#usage-3)
-  * [`Boost Kotest MockServer`](#boost-kotest-mockserver)
+  * [`Boost Kotest`](#boost-kotest)
     * [Configuration](#configuration-5)
       * [Maven](#maven-6)
       * [Gradle (.kts)](#gradle-kts-6)
-    * [Usage](#usage-4)
-  * [`Boost Kotest TestContainers`](#boost-kotest-testcontainers)
+  * [`Boost Kotest Mockk`](#boost-kotest-mockk)
     * [Configuration](#configuration-6)
       * [Maven](#maven-7)
       * [Gradle (.kts)](#gradle-kts-7)
-    * [Usage](#usage-5)
-  * [`Boost Kotest TestContainers Keycloak`](#boost-kotest-testcontainers-keycloak)
+    * [Usage](#usage-4)
+  * [`Boost Kotest MockServer`](#boost-kotest-mockserver)
     * [Configuration](#configuration-7)
       * [Maven](#maven-8)
       * [Gradle (.kts)](#gradle-kts-8)
-    * [Usage](#usage-6)
-  * [`Boost Kotest TestContainers Postgres`](#boost-kotest-testcontainers-postgres)
+    * [Usage](#usage-5)
+  * [`Boost Kotest TestContainers`](#boost-kotest-testcontainers)
     * [Configuration](#configuration-8)
       * [Maven](#maven-9)
       * [Gradle (.kts)](#gradle-kts-9)
-    * [Usage](#usage-7)
-  * [`Boost Kotest TestContainers RabbitMQ`](#boost-kotest-testcontainers-rabbitmq)
+    * [Usage](#usage-6)
+  * [`Boost Kotest TestContainers Keycloak`](#boost-kotest-testcontainers-keycloak)
     * [Configuration](#configuration-9)
       * [Maven](#maven-10)
       * [Gradle (.kts)](#gradle-kts-10)
-    * [Usage](#usage-8)
-  * [`Boost Utils`](#boost-utils)
+    * [Usage](#usage-7)
+  * [`Boost Kotest TestContainers Postgres`](#boost-kotest-testcontainers-postgres)
     * [Configuration](#configuration-10)
       * [Maven](#maven-11)
       * [Gradle (.kts)](#gradle-kts-11)
+    * [Usage](#usage-8)
+  * [`Boost Kotest TestContainers RabbitMQ`](#boost-kotest-testcontainers-rabbitmq)
+    * [Configuration](#configuration-11)
+      * [Maven](#maven-12)
+      * [Gradle (.kts)](#gradle-kts-12)
     * [Usage](#usage-9)
 
 ---
@@ -101,6 +106,41 @@ implementation(platform("io.justdevit.kotlin:boost-bom:$kotlinBoostVersion"))
 ---
 
 # Modules
+
+## `Boost Commons`
+
+The module has a set of extensions for the core classes like `String`, `Collections`, `Boolean` and others.  
+This extensions can bring some boost to your code to be more clean and readable.
+
+### Configuration
+
+#### Maven
+
+```xml
+
+<dependency>
+  <groupId>io.justdevit.kotlin</groupId>
+  <artifactId>boost-commons</artifactId>
+</dependency>
+```
+
+#### Gradle (.kts)
+
+```kotlin
+implementation("io.justdevit.kotlin:boost-commons")
+```
+
+### Usage
+
+The IntelliJ IDEA will suggest you useful function for your usecase.
+
+**Constants:**
+
+* `ISO8601_FORMATTER`
+* `EUROPEAN_DATE_FORMATTER`
+* `EUROPEAN_DATE_TIME_FORMATTER`
+
+---
 
 ## `Boost Domain`
 
@@ -328,6 +368,30 @@ The module is implementation of the API of `Boost Logging Core` based on Slf4J f
 
 ```kotlin
 implementation("io.justdevit.kotlin:boost-logging-slf4j")
+```
+
+---
+
+## `Boost EventBus`
+
+The module is implementation of the simple Event Bus system.
+
+### Configuration
+
+#### Maven
+
+```xml
+
+<dependency>
+  <groupId>io.justdevit.kotlin</groupId>
+  <artifactId>boost-eventbus</artifactId>
+</dependency>
+```
+
+#### Gradle (.kts)
+
+```kotlin
+implementation("io.justdevit.kotlin:boost-eventbus")
 ```
 
 ---
@@ -611,37 +675,3 @@ implementation("io.justdevit.kotlin:boost-kotest-testcontainers-rabbitmq")
       ...
   })
   ```
-
-## `Boost Utils`
-
-The module has a set of extensions for the core classes like `String`, `Collections`, `Boolean` and others.  
-This extensions can bring some boost to your code to be more clean and readable.
-
-### Configuration
-
-#### Maven
-
-```xml
-
-<dependency>
-  <groupId>io.justdevit.kotlin</groupId>
-  <artifactId>boost-utils</artifactId>
-</dependency>
-```
-
-#### Gradle (.kts)
-
-```kotlin
-implementation("io.justdevit.kotlin:boost-utils")
-```
-
-### Usage
-
-The IntelliJ IDEA will suggest you useful function for your usecase.
-
-**Constants:**
-
-* `ISO8601_FORMATTER`
-* `EUROPEAN_DATE_FORMATTER`
-* `EUROPEAN_DATE_TIME_FORMATTER`
-

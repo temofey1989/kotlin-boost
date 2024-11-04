@@ -3,7 +3,7 @@ val awsCrtVersion: String by project
 val kotlinCoroutinesVersion: String by project
 
 dependencies {
-    api(project(":boost-model"))
+    api(project(":boost-commons"))
 
     api(platform("software.amazon.awssdk:bom:$awsSdkVersion"))
     api("software.amazon.awssdk:s3")

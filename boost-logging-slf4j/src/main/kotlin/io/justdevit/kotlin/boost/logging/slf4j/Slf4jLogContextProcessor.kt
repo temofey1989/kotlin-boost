@@ -11,6 +11,8 @@ import org.slf4j.MDC
  * This class applies and restores the logging context using SLF4J's MDC implementation.
  */
 class Slf4jLogContextProcessor : LogContextProcessor {
+    override fun currentAttributes(): Map<String, String?> = MDC.getCopyOfContextMap()
+
     override fun applyContext(context: LogContext): LogContextSnapshot {
         if (context.attributes.isEmpty() && !context.clear) {
             return LogContextSnapshot()

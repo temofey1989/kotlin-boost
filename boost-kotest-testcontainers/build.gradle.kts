@@ -2,8 +2,8 @@ val kotestExtensionTestcontainersVersion: String by project
 val testcontainersVersion: String by project
 
 dependencies {
+    api(project(":boost-commons"))
     api(project(":boost-kotest"))
-    api(project(":boost-utils"))
 
     // https://github.com/testcontainers/testcontainers-java/issues/8338
     @Suppress("VulnerableLibrariesLocal", "RedundantSuppression")

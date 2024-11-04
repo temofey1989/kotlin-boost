@@ -20,9 +20,11 @@ fun <T> logScope(vararg pairs: Pair<String, String?>, action: () -> T): T {
     val context = LogContext(attributes = pairs.toMap().toMutableMap())
     val processor = findLogContextProcessor()
     val snapshot = processor.applyContext(context)
-    val result = action()
-    processor.restore(snapshot)
-    return result
+    return try {
+        action()
+    } finally {
+        processor.restore(snapshot)
+    }
 }
 
 /**

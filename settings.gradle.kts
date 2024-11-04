@@ -2,6 +2,7 @@ rootProject.name = "kotlin-boost"
 
 include(
     "boost-aws-s3",
+    "boost-commons",
     "boost-domain",
     "boost-kotest",
     "boost-kotest-mockk",
@@ -13,9 +14,7 @@ include(
     "boost-kotest-testcontainers-rabbitmq",
     "boost-logging-core",
     "boost-logging-slf4j",
-    "boost-model",
     "boost-serialization-json",
-    "boost-utils",
 )
 
 includeBuild("boost-bom")

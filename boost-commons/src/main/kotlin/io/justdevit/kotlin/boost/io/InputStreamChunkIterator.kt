@@ -7,6 +7,15 @@ import java.io.InputStream
 private const val EOF = -1
 private val EMPTY_BYTE_ARRAY = ByteArray(0)
 
+/**
+ * An iterator that reads an [InputStream] in chunks of a specified size.
+ *
+ * @constructor Creates an instance of [InputStreamChunkIterator] with the given input stream and chunk size.
+ * @param inputStream The input stream from which data is read.
+ * @param chunkSize The size of each chunk to be read from the input stream.
+ *
+ * @throws IllegalArgumentException if the chunk size is not greater than zero.
+ */
 class InputStreamChunkIterator(private val inputStream: InputStream, chunkSize: Int) :
     Iterator<ByteArray>,
     Closeable {

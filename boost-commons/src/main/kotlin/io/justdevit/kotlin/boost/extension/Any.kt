@@ -27,7 +27,7 @@ fun <T> T.toSingletonList(): List<T> = listOf(this)
  * @param block The lambda function to be applied on the receiver object.
  * @return The receiver object after applying the [block] function, or null if the receiver object is null.
  */
-fun <T> T?.applyNotNull(block: T.() -> Unit): T? = this?.apply(block)
+inline fun <T> T?.applyNotNull(block: T.() -> Unit): T? = this?.apply(block)
 
 /**
  * Returns the non-null value if it is not null, or throws the specified exception.

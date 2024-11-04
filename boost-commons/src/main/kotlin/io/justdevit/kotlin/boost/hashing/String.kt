@@ -2,7 +2,6 @@ package io.justdevit.kotlin.boost.hashing
 
 import io.justdevit.kotlin.boost.base64.decode
 import io.justdevit.kotlin.boost.base64.isBase64
-import org.apache.commons.codec.binary.Hex
 import java.security.MessageDigest.getInstance
 
 /**
@@ -48,7 +47,7 @@ inline fun <reified T : Checksum> String.to(): T =
  *
  * @return the SHA-256 hash value in hexadecimal format.
  */
-fun String.sha256ToHex() = String(Hex.encodeHex(toByteArray().sha256()))
+fun String.sha256ToHex() = toByteArray().sha256().toHex()
 
 /**
  * Converts a string to its SHA-256 hash value represented as a string.
@@ -56,3 +55,10 @@ fun String.sha256ToHex() = String(Hex.encodeHex(toByteArray().sha256()))
  * @return the SHA-256 hash value as a string.
  */
 fun String.sha256ToString() = toByteArray().sha256ToString()
+
+/**
+ * Converts this string to a hexadecimal string representation.
+ *
+ * @return The hexadecimal string representation of this string.
+ */
+fun String.toHex(): String = toByteArray().toHex()
