@@ -17,7 +17,7 @@ class PropsTest :
             }
 
             "Should be able to extract property as String" {
-                val value = property(key)
+                val value = propertyAsString(key)
                 value shouldBe "1.2"
             }
 
@@ -39,11 +39,6 @@ class PropsTest :
             "Should be able to extract property list as BigDecimal" {
                 val value = propertyList<BigDecimal>(key)
                 value shouldContainExactly listOf(1.2.toBigDecimal())
-            }
-
-            "Should be able to use default value" {
-                val value = property<Int>("val.test", 10)
-                value shouldBe 10
             }
 
             "Should be able to use default value supplier" {

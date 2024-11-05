@@ -17,34 +17,62 @@ import kotlin.reflect.KClass
  *
  * @return The property value as a string, or the default value if the property is not found or is blank.
  */
-fun property(name: String, defaultValue: String = "") = property(String::class, name) { defaultValue }
+fun propertyAsString(name: String, defaultValue: String = "") = propertyOrDefault(String::class, name) { defaultValue }
 
 /**
- * Retrieves the value of a property or environment variable and converts it to the specified type.
- * If the property or environment variable is not found or is blank, a provided default value is used.
+ * Retrieves a property value as an instance of the specified type. If the property does not exist,
+ * an exception is thrown.
  *
- * @param name The name of the property to retrieve. It will be converted to uppercase,
- * with periods and dashes replaced by underscores, before looking up the environment variable.
+ * @param name The name of the property to retrieve.
  *
- * @param defaultValue The default value to return if the property or environment variable is not found or is blank.
- * This value will be used to determine the type T.
+ * @return The property value as an instance of the specified type.
  *
- * @return The value of the property or environment variable converted to the specified type T,
- * or the default value if the property or environment variable is not found or blank.
+ * @throws IllegalStateException If no value is found for the given property name.
  */
-inline fun <reified T : Any> property(name: String, defaultValue: T? = null): T? = property(T::class, name) { defaultValue }
+inline fun <reified T : Any> property(name: String): T =
+    propertyOrDefault(T::class, name) {
+        throw IllegalStateException("No value for key '$name'.")
+    } as T
 
 /**
- * Retrieves a property value as an instance of the specified type T. If the property does not exist or is blank,
- * the provided default value function is used to generate the value.
+ * Retrieves a property value of a reified type T with a specified name.
+ * If the property is not found the provided default value is returned.
  *
- * @param name The name of the property to retrieve. It will be converted to uppercase, with periods and dashes
- * replaced by underscores, before looking up the property.
- * @param defaultValueSupplier A function that computes the default value if the property is not found or is blank.
+ * @param name The name of the property to retrieve.
+ * @param defaultValue The default value to return if the property is not found.
  *
  * @return The property value as an instance of the specified type T, or the default value if the property is not found or is blank.
  */
-inline fun <reified T : Any> property(name: String, noinline defaultValueSupplier: () -> T?): T? = property(T::class, name, defaultValueSupplier)
+inline fun <reified T : Any> property(name: String, defaultValue: T): T =
+    propertyOrDefault(T::class, name) {
+        defaultValue
+    } as T
+
+/**
+ * Retrieves a property value as an instance of the specified type. If the property does not exist, the provided
+ * default value function is used to generate the value.
+ *
+ * @param T The type of the property value.
+ * @param name The name of the property to retrieve.
+ * @param defaultValueSupplier A function that computes the default value if the property is not found.
+ *
+ * @return The property value as an instance of the specified type T, or the default value if the property is not found.
+ */
+inline fun <reified T : Any> property(name: String, noinline defaultValueSupplier: () -> T): T =
+    propertyOrDefault(T::class, name) {
+        defaultValueSupplier()
+    } as T
+
+/**
+ * Retrieves a property value as an instance of the specified type if the property exists.
+ * If the property does not exist or is blank, returns null.
+ *
+ * @param T The type of the property value.
+ * @param name The name of the property to retrieve.
+ *
+ * @return The property value as an instance of the specified type T, or null if the property is not found or is blank.
+ */
+inline fun <reified T : Any> propertyOrNull(name: String): T? = propertyOrDefault(T::class, name) { null }
 
 /**
  * Retrieves a property value as an instance of the specified type. If the property does not exist or is blank,
@@ -56,18 +84,18 @@ inline fun <reified T : Any> property(name: String, noinline defaultValueSupplie
  * @return The property value as an instance of the specified type T, or the default value if the property is not found or is blank.
  */
 @Suppress("UNCHECKED_CAST")
-fun <T : Any> property(
+fun <T : Any> propertyOrDefault(
     clazz: KClass<T>,
     name: String,
-    defaultValueSupplier: () -> T?,
+    defaultValueSupplier: () -> T? = { null },
 ): T? {
-    val envName = name
-        .replace(".", "_")
-        .replace("-", "_")
-        .uppercase()
+    val envName = name.toEnvKey()
     val value = getenv(envName)?.takeIf { it.isNotBlank() }
         ?: getProperty(name)?.takeIf { it.isNotBlank() }
-    return if (value == null) defaultValueSupplier() else value.toTypedValue(clazz) as T
+    return if (value == null)
+        defaultValueSupplier()
+    else
+        value.toTypedValue(clazz) as T
 }
 
 /**
@@ -95,7 +123,7 @@ fun <T : Any> propertyList(
     name: String,
     separator: String = ",",
 ): List<T> =
-    property(name, "")
+    propertyOrNull<String>(name)
         ?.split(separator)
         ?.map { it.trim() }
         ?.map { it.toTypedValue(clazz) as T }
@@ -113,3 +141,8 @@ private fun String.toTypedValue(clazz: KClass<*>) =
         Boolean::class -> this.toBoolean()
         else -> throw IllegalArgumentException("Unsupported property type '$clazz' for property value: '$this'.")
     }
+
+private fun String.toEnvKey() =
+    replace(".", "_")
+        .replace("-", "_")
+        .uppercase()
