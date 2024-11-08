@@ -4,41 +4,12 @@ import io.justdevit.kotlin.boost.logging.Logging
 import kotlinx.coroutines.runBlocking
 
 /**
- * Represents a system that allows for publishing and listening to events.
- *
- * Implementations of this interface can publish events to listeners
- * and register or unregister listeners dynamically.
+ * EventBus is an interface that serves as a contract for an event bus system, combining event publishing
+ * capabilities and event listener management functionality.
  */
-interface EventBus {
-
-    /**
-     * Publishes one or more events to the event bus system.
-     *
-     * @param events Events to be published.
-     */
-    fun publish(vararg events: Event)
-
-    /**
-     * Publishes one or more events to the event bus system.
-     *
-     * @param events Events to be published.
-     */
-    suspend fun coPublish(vararg events: Event)
-
-    /**
-     * Registers one or more event listeners to the event bus system.
-     *
-     * @param listeners Listeners to be registered.
-     */
-    fun register(vararg listeners: EventListener<*>)
-
-    /**
-     * Unregisters one or more event listeners from the event bus system.
-     *
-     * @param listeners Listeners to be unregistered.
-     */
-    fun unregister(vararg listeners: EventListener<*>)
-}
+interface EventBus :
+    EventPublisher,
+    EventListenerRegister
 
 open class DefaultEventBus(private val listeners: MutableList<EventListener<*>> = mutableListOf()) : EventBus {
 
