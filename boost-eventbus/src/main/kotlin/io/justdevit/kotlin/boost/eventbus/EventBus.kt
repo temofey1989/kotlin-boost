@@ -11,7 +11,9 @@ interface EventBus :
     EventPublisher,
     EventListenerRegister
 
-open class DefaultEventBus(private val listeners: MutableList<EventListener<*>> = mutableListOf()) : EventBus {
+open class DefaultEventBus(listeners: List<EventListener<*>> = emptyList()) : EventBus {
+
+    private val listeners: MutableList<EventListener<*>> = listeners.toMutableList()
 
     companion object : Logging()
 

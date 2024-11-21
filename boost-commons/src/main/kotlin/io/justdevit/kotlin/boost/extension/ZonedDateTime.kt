@@ -2,6 +2,13 @@ package io.justdevit.kotlin.boost.extension
 
 import java.time.ZoneId.systemDefault
 import java.time.ZonedDateTime
+import java.time.ZonedDateTime.now
+
+/**
+ * Represents the current time offset from UTC in hours.
+ */
+val TIME_OFFSET_HOURS: Int
+    get() = now().offset.totalSeconds / 3600
 
 /**
  * Converts the given [ZonedDateTime] to the local system time zone.
