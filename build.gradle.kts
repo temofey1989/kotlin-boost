@@ -1,15 +1,16 @@
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.time.Duration
 
 plugins {
-    kotlin("jvm") version "2.0.0"
-    kotlin("plugin.serialization") version "2.0.0"
-    id("org.jmailen.kotlinter") version "4.1.1"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlinter)
+    alias(libs.plugins.nexus.publish)
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
 }
 
 allprojects {
@@ -22,24 +23,28 @@ allprojects {
 
 subprojects {
 
-    apply(plugin = "org.jetbrains.kotlin.jvm")
-    apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
-    apply(plugin = "org.jmailen.kotlinter")
-
-    val kotestVersion: String by project
-    val mockkVersion: String by project
+    apply(
+        plugin = rootProject.libs.plugins.kotlin.jvm
+            .get()
+            .pluginId,
+    )
+    apply(
+        plugin = rootProject.libs.plugins.kotlin.serialization
+            .get()
+            .pluginId,
+    )
+    apply(
+        plugin = rootProject.libs.plugins.kotlinter
+            .get()
+            .pluginId,
+    )
 
     dependencies {
-        implementation(kotlin("stdlib"))
-
-        testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
-        testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
-        testImplementation("io.kotest:kotest-property:$kotestVersion")
-
-        testImplementation("io.mockk:mockk:$mockkVersion")
+        implementation(rootProject.libs.kotlin.stdlib)
+        testImplementation(rootProject.libs.bundles.testing)
     }
 
-    java.sourceCompatibility = JavaVersion.VERSION_17
+    java.sourceCompatibility = JavaVersion.VERSION_21
 
     tasks {
         formatKotlin {
@@ -53,13 +58,13 @@ subprojects {
         }
 
         compileKotlin {
-            kotlinOptions {
+            compilerOptions {
                 freeCompilerArgs =
                     listOf(
                         "-Xjsr305=strict",
                         "-Xcontext-receivers",
                     )
-                jvmTarget = java.sourceCompatibility.toString()
+                jvmTarget = JvmTarget.fromTarget(java.sourceCompatibility.toString())
             }
         }
 

@@ -1,7 +1,7 @@
-val testcontainersVersion: String by project
-
 dependencies {
     api(project(":boost-kotest-testcontainers"))
-    api(kotlin("reflect"))
-    api("org.testcontainers:rabbitmq:$testcontainersVersion")
+    with(rootProject) {
+        api(libs.kotlin.reflect)
+        api(libs.testcontainers.rabbitmq)
+    }
 }

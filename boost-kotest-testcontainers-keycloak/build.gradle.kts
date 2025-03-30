@@ -1,11 +1,16 @@
-val keycloakTestcontainerVersion: String by project
-
-apply(plugin = "org.jetbrains.kotlin.plugin.serialization")
+apply(
+    plugin = rootProject.libs.plugins.kotlin.serialization
+        .get()
+        .pluginId,
+)
 
 dependencies {
+    api(project(":boost-commons"))
     api(project(":boost-serialization-json"))
     api(project(":boost-kotest-testcontainers"))
-    api(kotlin("reflect"))
-    @Suppress("VulnerableLibrariesLocal", "RedundantSuppression")
-    api("com.github.dasniko:testcontainers-keycloak:$keycloakTestcontainerVersion")
+    api(project(":boost-rest-assured"))
+    with(rootProject) {
+        api(libs.kotlin.reflect)
+        api(libs.testcontainers.keycloak)
+    }
 }

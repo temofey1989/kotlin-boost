@@ -6,7 +6,7 @@ plugins {
     `java-platform`
     `maven-publish`
     signing
-    id("io.github.gradle-nexus.publish-plugin") version "2.0.0"
+    alias(libs.plugins.nexus.publish)
 }
 
 version = (

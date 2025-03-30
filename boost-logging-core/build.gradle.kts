@@ -1,9 +1,8 @@
-val kotlinCoroutinesVersion: String by project
-val ksuidVersion: String by project
-
 dependencies {
     api(project(":boost-commons"))
-    implementation("com.github.ksuid:ksuid:$ksuidVersion")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion")
-    compileOnly("org.jetbrains.kotlinx:kotlinx-coroutines-slf4j:$kotlinCoroutinesVersion")
+    with(rootProject) {
+        implementation(libs.ksuid)
+        compileOnly(libs.kotlin.coroutines.core)
+        compileOnly(libs.kotlin.coroutines.slf4j)
+    }
 }

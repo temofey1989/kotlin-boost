@@ -1,7 +1,7 @@
-val mockkVersion: String by project
-
 dependencies {
     api(project(":boost-kotest"))
-    api(kotlin("reflect"))
-    api("io.mockk:mockk:$mockkVersion")
+    with(rootProject) {
+        api(libs.kotlin.reflect)
+        api(libs.mockk)
+    }
 }
