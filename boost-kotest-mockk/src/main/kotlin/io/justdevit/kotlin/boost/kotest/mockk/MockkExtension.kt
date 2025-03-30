@@ -18,3 +18,5 @@ object MockkExtension : BeforeEachListener {
         clearAllMocks()
     }
 }
+
+class MockkExtensionBridge : BeforeEachListener by MockkExtension

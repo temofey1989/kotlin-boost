@@ -1,66 +1,60 @@
 package io.justdevit.kotlin.boost.kotest.testcontainters.localstack
 
-import io.justdevit.kotlin.boost.extension.runIf
-import io.justdevit.kotlin.boost.kotest.ANY_EXTENSION_FILTERS
+import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
-import io.kotest.core.spec.Spec
+import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
 import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.localstack.LocalStackContainer
 import org.testcontainers.containers.localstack.LocalStackContainer.Service
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
-import kotlin.reflect.KClass
 
-private var localstackContainer: LocalStackContainer? = null
-private val LOCK: Lock = ReentrantLock()
+const val LOCALSTACK_SERVICES_PROPERTY = "localstack.services"
+const val LOCALSTACK_IMAGE_TAG_PROPERTY = "localstack.image-tag"
+
+object LocalstackHolder : ContainerHolder<LocalStackContainer>() {
+
+    val imageTag = property(LOCALSTACK_IMAGE_TAG_PROPERTY, "latest")
+    val services = property(LOCALSTACK_SERVICES_PROPERTY, "")
+        .split(",")
+        .map(String::trim)
+        .map { Service.valueOf(it) }
+
+    override fun initializeTool() =
+        LocalStackContainer(DockerImageName.parse("localstack/localstack:$imageTag")).apply {
+            start()
+            withEnv("DEBUG", "1")
+            withClasspathResourceMapping("/localstack", "/etc/localstack/init/ready.d", READ_WRITE)
+            withServices(*services.toTypedArray())
+            waitingFor(Wait.forLogMessage(".*Local Stack has been initialized\\.\n", 1))
+            configureServiceVariables()
+        }
+
+    private fun LocalStackContainer.configureServiceVariables() {
+        services.forEach {
+            val serviceName = it.name.uppercase()
+            System.setProperty("AWS_${serviceName}_ENDPOINT", getEndpointOverride(it).toString())
+            System.setProperty("AWS_${serviceName}_REGION", region.toString())
+            System.setProperty("AWS_${serviceName}_ACCESS_KEY", accessKey)
+            System.setProperty("AWS_${serviceName}_SECRET_KEY", secretKey)
+        }
+    }
+}
 
 /**
  * The `RabbitMqExtension` class is an implementation of the `ExternalToolExtension` interface that represents an extension for running RabbitMQ containers.
  * It provides functionality to start and stop a RabbitMQ container as needed.
  */
-class LocalstackExtension(private val services: Collection<Service> = emptyList(), private val filters: Collection<ExtensionFilter> = ANY_EXTENSION_FILTERS) : ExternalToolExtension<LocalStackContainer, LocalStackContainer> {
+class LocalstackExtension(filters: Collection<ExtensionFilter> = emptyList()) :
+    ExternalToolExtension<LocalStackContainer>(
+        holder = LocalstackHolder,
+        filters = filters,
+    ) {
 
-    constructor(services: Collection<Service> = emptyList(), vararg filters: ExtensionFilter) : this(services, filters.toSet())
-
-    override fun <T : Spec> instantiate(clazz: KClass<T>): Spec? {
-        if (filters.any { it.decide(clazz) }) {
-            startContainer()
-        }
-        return null
-    }
-
-    override fun mount(configure: LocalStackContainer.() -> Unit): LocalStackContainer {
-        startContainer()
-        return localstackContainer!!
-    }
-
-    override suspend fun afterProject() {
-        localstackContainer?.stop()
-    }
-
-    private fun startContainer() {
-        LOCK.runIf({ localstackContainer == null }) {
-            localstackContainer =
-                LocalStackContainer(DockerImageName.parse("localstack/localstack:1.4.0")).apply {
-                    start()
-                    withEnv("DEBUG", "1")
-                    withClasspathResourceMapping("/localstack", "/etc/localstack/init/ready.d", READ_WRITE)
-                    withServices(*services.toTypedArray())
-                    waitingFor(Wait.forLogMessage(".*Local Stack has been initialized\\.\n", 1))
-
-                    services.forEach {
-                        System.setProperty("AWS_${it.name}_ENDPOINT", getEndpointOverride(it).toString())
-                        System.setProperty("AWS_${it.name}_REGION", region.toString())
-                        System.setProperty("AWS_${it.name}_ACCESS_KEY", accessKey)
-                        System.setProperty("AWS_${it.name}_SECRET_KEY", secretKey)
-                    }
-                }
-        }
-    }
+    constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
+    constructor() : this(emptyList())
 }
 
 /**
@@ -70,11 +64,12 @@ class LocalstackExtension(private val services: Collection<Service> = emptyList(
  * @return The [LocalstackExtension] object.
  */
 inline fun <reified A : Annotation> LocalstackExtension(services: Collection<Service> = emptyList(), vararg predicates: (A) -> Boolean): LocalstackExtension {
+    System.setProperty(LOCALSTACK_SERVICES_PROPERTY, services.joinToString(",") { it.name })
     val filters = when {
-        predicates.isEmpty() -> ANY_EXTENSION_FILTERS
+        predicates.isEmpty() -> emptyList()
         else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
     }
-    return LocalstackExtension(services, filters)
+    return LocalstackExtension(filters)
 }
 
 /**

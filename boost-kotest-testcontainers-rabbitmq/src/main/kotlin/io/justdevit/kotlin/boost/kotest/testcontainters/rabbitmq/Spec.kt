@@ -1,7 +1,6 @@
 package io.justdevit.kotlin.boost.kotest.testcontainters.rabbitmq
 
-import io.kotest.core.extensions.install
-import io.kotest.core.spec.Spec
+import io.justdevit.kotlin.boost.kotest.SpecInstallation
 
 /**
  * Installs the RabbitMQ Extension for a Spec.
@@ -10,10 +9,12 @@ import io.kotest.core.spec.Spec
  * ```
  * class MyTest : FreeSpec({
  *
- *     installRabbitMq()
+ *     install {
+ *         rabbitMq()
+ *     }
  *
  *     ...
  * })
  * ```
  */
-fun Spec.installRabbitMq() = install(RabbitMqExtension())
+fun SpecInstallation.rabbitMq() = install(RabbitMqExtension())

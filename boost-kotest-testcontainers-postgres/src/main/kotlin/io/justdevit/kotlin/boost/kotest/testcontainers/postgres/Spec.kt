@@ -1,7 +1,6 @@
 package io.justdevit.kotlin.boost.kotest.testcontainers.postgres
 
-import io.kotest.core.extensions.install
-import io.kotest.core.spec.Spec
+import io.justdevit.kotlin.boost.kotest.SpecInstallation
 
 /**
  * Installs the Postgres Extension for a Spec.
@@ -10,10 +9,12 @@ import io.kotest.core.spec.Spec
  * ```
  * class MyTest : FreeSpec({
  *
- *     installPostgres()
+ *     install {
+ *         postgres()
+ *     }
  *
  *     ...
  * })
  * ```
  */
-fun Spec.installPostgres() = install(PostgresExtension())
+fun SpecInstallation.postgres() = install(PostgresExtension())

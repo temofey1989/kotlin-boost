@@ -1,7 +1,7 @@
 package io.justdevit.kotlin.boost.kotest.testcontainers.keycloak
 
+import io.justdevit.kotlin.boost.kotest.SpecInstallation
 import io.kotest.core.extensions.install
-import io.kotest.core.spec.Spec
 
 /**
  * Installs the Keycloak extension for the current testing spec.
@@ -15,7 +15,9 @@ import io.kotest.core.spec.Spec
  * ```
  * class MyTest : FreeSpec({
  *
- *     installKeycloak()
+ *     install {
+ *         keycloak()
+ *     }
  *
  *     ...
  * })
@@ -23,4 +25,4 @@ import io.kotest.core.spec.Spec
  *
  * @see KeycloakExtension
  */
-fun Spec.installKeycloak() = install(KeycloakExtension())
+fun SpecInstallation.keycloak() = install(KeycloakExtension())

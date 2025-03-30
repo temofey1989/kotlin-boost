@@ -1,6 +1,6 @@
 package io.justdevit.kotlin.boost.kotest.mockk
 
-import io.kotest.core.spec.Spec
+import io.justdevit.kotlin.boost.kotest.SpecInstallation
 import io.mockk.clearAllMocks
 
 /**
@@ -10,13 +10,15 @@ import io.mockk.clearAllMocks
  * ```
  * class MyTest : FreeSpec({
  *
- *     installMockkClearing()
+ *     install {
+ *         mockk()
+ *     }
  *
  *     ...
  * })
  * ```
  */
-fun Spec.installMockkClearing(
+fun SpecInstallation.mockk(
     answers: Boolean = true,
     recordedCalls: Boolean = true,
     childMocks: Boolean = true,
@@ -25,7 +27,7 @@ fun Spec.installMockkClearing(
     staticMocks: Boolean = true,
     constructorMocks: Boolean = true,
 ) {
-    beforeEach {
+    spec.beforeEach {
         clearAllMocks(
             answers = answers,
             recordedCalls = recordedCalls,

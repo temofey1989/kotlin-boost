@@ -1,7 +1,7 @@
 package io.justdevit.kotlin.boost.kotest.testcontainters.localstack
 
+import io.justdevit.kotlin.boost.kotest.SpecInstallation
 import io.kotest.core.extensions.install
-import io.kotest.core.spec.Spec
 
 /**
  * Installs the Localstack Extension for a Spec.
@@ -10,10 +10,12 @@ import io.kotest.core.spec.Spec
  * ```
  * class MyTest : FreeSpec({
  *
- *     installLocalstack()
+ *     install {
+ *         localstack()
+ *     }
  *
  *     ...
  * })
  * ```
  */
-fun Spec.installLocalStack() = install(LocalstackExtension())
+fun SpecInstallation.localStack() = install(LocalstackExtension())
