@@ -53,6 +53,7 @@ data class SimpleFilterAttribute(override val key: String) : FilterAttribute
  * - [LT] - Represents the less-than operator.
  * - [LE] - Represents the less-than-or-equal operator.
  * - [LI] - Represents the like operator.
+ * - [NL] - Represents the not-like operator.
  * - [IN] - Represents the in operator.
  * - [NI] - Represents the not-in operator.
  */
@@ -64,6 +65,7 @@ enum class FilterOperator {
     LT,
     LE,
     LI,
+    NL,
     IN,
     NI,
 }
