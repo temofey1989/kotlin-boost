@@ -4,6 +4,7 @@ import java.text.Normalizer
 import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -138,6 +139,13 @@ fun String.toZoneOffset(): ZoneOffset = ZoneOffset.of(this)
  * @return The [LocalDate] representation of this string.
  */
 fun String.toLocalDate(): LocalDate = LocalDate.parse(this)
+
+/**
+ * Converts the string to a [LocalTime] instance.
+ *
+ * @return The [LocalTime] instance parsed from the string.
+ */
+fun String.toLocalTime(): LocalTime = LocalTime.parse(this)
 
 /**
  * Converts a string to a [LocalDateTime] object.
