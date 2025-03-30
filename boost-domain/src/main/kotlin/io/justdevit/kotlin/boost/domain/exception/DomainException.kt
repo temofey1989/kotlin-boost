@@ -38,7 +38,7 @@ data class EntityNotFoundException(
         source = source,
     )
 
-data class BusinessLogicException(
+data class BusinessException(
     override val message: String,
     override val source: Any = UndefinedDomainExceptionSource,
     override val code: String = UNDEFINED_EXCEPTION_CODE,
