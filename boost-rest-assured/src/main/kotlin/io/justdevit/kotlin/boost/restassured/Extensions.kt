@@ -1,4 +1,4 @@
-package io.justdevit.kotlin.boost.kotest
+package io.justdevit.kotlin.boost.restassured
 
 import io.restassured.response.ExtractableResponse
 import io.restassured.response.Response
