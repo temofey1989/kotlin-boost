@@ -15,6 +15,7 @@ include(
     "boost-kotest-testcontainers-rabbitmq",
     "boost-logging-core",
     "boost-logging-slf4j",
+    "boost-rest-assured",
     "boost-serialization-json",
 )
 
