@@ -3,11 +3,11 @@ package io.justdevit.kotlin.boost.eventbus
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContainExactly
 
-class DefaultEventBusTest :
+class SimpleEventBusTest :
     FreeSpec(
         {
 
-            val eventBus = DefaultEventBus()
+            val eventBus = SimpleEventBus()
             val listener = TestListener()
             eventBus.register(listener)
             beforeEach {
@@ -16,7 +16,7 @@ class DefaultEventBusTest :
 
             "Should not register listener twice" {
                 eventBus.register(listener)
-                val event = TestEvent("TEST")
+                val event = TestEvent1("TEST")
 
                 eventBus.publish(event)
 
@@ -24,9 +24,9 @@ class DefaultEventBusTest :
             }
 
             "Should detect and exclude cycles in event execution" {
-                val event1 = TestEvent("EVENT-1")
-                val event2 = TestEvent("EVENT-2")
-                val event3 = TestEvent("EVENT-3")
+                val event1 = TestEvent1("EVENT-1")
+                val event2 = TestEvent1("EVENT-2")
+                val event3 = TestEvent1("EVENT-3")
 
                 event1.registerNext(event2)
                 event2.registerNext(event3)

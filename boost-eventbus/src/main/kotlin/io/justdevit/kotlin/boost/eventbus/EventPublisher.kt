@@ -11,11 +11,4 @@ interface EventPublisher {
      * @param events Events to be published.
      */
     fun publish(vararg events: Event)
-
-    /**
-     * Publishes one or more events to the event bus system.
-     *
-     * @param events Events to be published.
-     */
-    suspend fun coPublish(vararg events: Event)
 }

@@ -9,7 +9,7 @@ class EventTest :
         {
 
             "Should reject to register itself to chain" {
-                val event = TestEvent("TEST")
+                val event = TestEvent1("TEST")
 
                 shouldThrow<IllegalArgumentException> {
                     event.registerNext(event)
