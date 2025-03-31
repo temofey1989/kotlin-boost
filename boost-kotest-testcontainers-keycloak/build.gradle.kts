@@ -9,8 +9,6 @@ dependencies {
     api(project(":boost-serialization-json"))
     api(project(":boost-kotest-testcontainers"))
     api(project(":boost-rest-assured"))
-    with(rootProject) {
-        api(libs.kotlin.reflect)
-        api(libs.testcontainers.keycloak)
-    }
+    api(rootProject.libs.kotlin.reflect)
+    api(rootProject.libs.testcontainers.keycloak)
 }

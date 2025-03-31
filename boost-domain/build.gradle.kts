@@ -1,7 +1,5 @@
 dependencies {
     api(project(":boost-commons"))
-    with(rootProject) {
-        api(libs.ksuid)
-        api(libs.kotlin.coroutines.core)
-    }
+    api(rootProject.libs.ksuid)
+    api(rootProject.libs.kotlin.coroutines.core)
 }

@@ -1,7 +1,5 @@
 dependencies {
     api(project(":boost-kotest"))
-    with(rootProject) {
-        api(libs.kotlin.reflect)
-        api(libs.mockk)
-    }
+    api(rootProject.libs.kotlin.reflect)
+    api(rootProject.libs.mockk)
 }

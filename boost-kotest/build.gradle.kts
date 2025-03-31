@@ -1,6 +1,4 @@
 dependencies {
-    with(rootProject) {
-        api(libs.kotlin.reflect)
-        api(libs.bundles.kotest)
-    }
+    api(rootProject.libs.kotlin.reflect)
+    api(rootProject.libs.bundles.kotest)
 }

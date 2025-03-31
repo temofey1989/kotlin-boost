@@ -1,7 +1,5 @@
 dependencies {
     api(project(":boost-kotest-testcontainers"))
-    with(rootProject) {
-        api(libs.kotlin.reflect)
-        api(libs.testcontainers.localstack)
-    }
+    api(rootProject.libs.kotlin.reflect)
+    api(rootProject.libs.testcontainers.localstack)
 }

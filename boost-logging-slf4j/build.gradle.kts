@@ -1,9 +1,7 @@
 dependencies {
     api(project(":boost-logging-core"))
-    with(rootProject) {
-        api(libs.logback.classic)
-        api(libs.janino)
-        api(libs.slf4j.extension.jul)
-        api(libs.logstash.logback.encoder)
-    }
+    api(rootProject.libs.logback.classic)
+    api(rootProject.libs.janino)
+    api(rootProject.libs.slf4j.extension.jul)
+    api(rootProject.libs.logstash.logback.encoder)
 }
