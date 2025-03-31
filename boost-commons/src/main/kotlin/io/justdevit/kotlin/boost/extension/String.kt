@@ -117,12 +117,12 @@ fun String.toLocale(): Locale {
     if (this.indexOf(delimiter) != -1) {
         val parts = this.split(delimiter)
         if (parts.size == 2) {
-            return Locale(parts[0], parts[1])
+            return Locale.of(parts[0], parts[1])
         } else if (parts.size == 3) {
-            return Locale(parts[0], parts[1], parts[2])
+            return Locale.of(parts[0], parts[1], parts[2])
         }
     }
-    return Locale(this)
+    return Locale.of(this)
 }
 
 /**
