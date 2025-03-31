@@ -42,6 +42,8 @@ subprojects {
     dependencies {
         implementation(rootProject.libs.kotlin.stdlib)
         testImplementation(rootProject.libs.bundles.testing)
+
+        implementation("io.netty:netty-common:4.1.118.Final")
     }
 
     java.sourceCompatibility = JavaVersion.VERSION_21
