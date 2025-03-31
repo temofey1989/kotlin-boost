@@ -1,8 +1,6 @@
 dependencies {
     api(project(":boost-commons"))
     api(project(":boost-kotest"))
-    with(rootProject) {
-        api(libs.kotlin.reflect)
-        api(libs.kotest.extensions.mockserver)
-    }
+    api(rootProject.libs.kotlin.reflect)
+    api(rootProject.libs.kotest.extensions.mockserver)
 }

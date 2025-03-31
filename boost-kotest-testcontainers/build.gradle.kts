@@ -1,8 +1,6 @@
 dependencies {
     api(project(":boost-commons"))
     api(project(":boost-kotest"))
-    with(rootProject) {
-        api(platform(libs.testcontainers.bom))
-        api(libs.kotest.extensions.testcontainers)
-    }
+    api(platform(rootProject.libs.testcontainers.bom))
+    api(rootProject.libs.kotest.extensions.testcontainers)
 }
