@@ -36,5 +36,14 @@ class SimpleEventBusTest :
 
                 listener.listenedEvents.shouldContainExactly(event1, event2, event3)
             }
+
+            "Should accept abstract class" {
+                val event1 = TestEvent1("TEST-1")
+                val event2 = TestEvent2("TEST-2")
+
+                eventBus.publish(event1, event2)
+
+                listener.listenedEvents.shouldContainExactly(event1, event2)
+            }
         },
     )

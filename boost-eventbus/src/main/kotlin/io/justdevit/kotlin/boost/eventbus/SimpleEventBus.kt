@@ -61,7 +61,7 @@ open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : Eve
             return
         }
         val listenersToApply = listeners
-            .filter { it.supportedClass == event::class.java }
+            .filter { it.supportedClass.isInstance(event) }
             .sortedBy { it.priority }
         listenersToApply.forEach {
             if (event.terminated) {
