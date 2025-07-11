@@ -32,9 +32,8 @@ fun String.requireNotBlank(builder: () -> String) {
  * @param builder A lambda function that returns the error message if the [String] is blank.
  * @throws [IllegalArgumentException] if the [String] is blank.
  */
-context(String)
-fun notBlank(builder: () -> String) {
-    this@String.requireNotBlank(builder)
+fun String.notBlank(builder: () -> String) {
+    requireNotBlank(builder)
 }
 
 /**

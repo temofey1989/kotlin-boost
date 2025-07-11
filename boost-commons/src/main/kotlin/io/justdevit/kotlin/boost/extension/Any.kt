@@ -30,9 +30,9 @@ fun <T> T.toSingletonList(): List<T> = listOf(this)
 inline fun <T> T?.applyNotNull(block: T.() -> Unit): T? = this?.apply(block)
 
 /**
- * Returns the non-null value if it is not null, or throws the specified exception.
+ * Returns the non-null value if it is not null or throws the specified exception.
  *
- * @param block The exception block to be executed if the value is null.
+ * @param block The exception supplier to be executed if the value is null.
  * @return The non-null value, if it is not null.
  * @throws Exception the specified exception returned by the block if the value is null.
  */
@@ -43,9 +43,9 @@ fun <T> T?.orThrow(block: () -> Exception): T = this ?: throw block()
  *
  * @param value The value associated with the key.
  */
-context(MutableMap<T, U>)
+context(map: MutableMap<T, U>)
 infix fun <T : Any, U> T.to(value: U) {
-    this@MutableMap[this] = value
+    map[this] = value
 }
 
 typealias MapBuilder<T, U> = MutableMap<T, U>.() -> Unit

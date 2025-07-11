@@ -8,6 +8,9 @@ import java.util.ServiceLoader
  */
 const val TEST_USER = "peter.tester"
 
+/**
+ * A global list of Boost extensions, dynamically loaded via the [ServiceLoader] mechanism.
+ */
 val BOOST_EXTENSIONS: List<Extension> by lazy {
     ServiceLoader.load(Extension::class.java).toList()
 }

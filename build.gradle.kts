@@ -42,8 +42,6 @@ subprojects {
     dependencies {
         implementation(rootProject.libs.kotlin.stdlib)
         testImplementation(rootProject.libs.bundles.testing)
-
-        implementation("io.netty:netty-common:4.1.118.Final")
     }
 
     java.sourceCompatibility = JavaVersion.VERSION_21
@@ -61,12 +59,12 @@ subprojects {
 
         compileKotlin {
             compilerOptions {
+                jvmTarget = JvmTarget.fromTarget(java.sourceCompatibility.majorVersion)
                 freeCompilerArgs =
                     listOf(
                         "-Xjsr305=strict",
-                        "-Xcontext-receivers",
+                        "-Xcontext-parameters",
                     )
-                jvmTarget = JvmTarget.fromTarget(java.sourceCompatibility.toString())
             }
         }
 
@@ -107,12 +105,8 @@ nexusPublishing {
     }
     repositories {
         sonatype {
-            if (!sonatypeNexusUrl.isNullOrBlank()) {
-                nexusUrl.set(uri(sonatypeNexusUrl!!))
-            }
-            if (!sonatypeSnapshotRepositoryUrl.isNullOrBlank()) {
-                snapshotRepositoryUrl.set(uri(sonatypeSnapshotRepositoryUrl!!))
-            }
+            nexusUrl.set(uri(sonatypeNexusUrl ?: "https://ossrh-staging-api.central.sonatype.com/service/local/"))
+            snapshotRepositoryUrl.set(uri(sonatypeSnapshotRepositoryUrl ?: "https://central.sonatype.com/repository/maven-snapshots/"))
             if (!ossrhUsername.isNullOrBlank()) {
                 username.set(ossrhUsername!!)
             }
