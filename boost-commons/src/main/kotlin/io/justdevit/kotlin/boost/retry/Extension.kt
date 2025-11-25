@@ -1,6 +1,8 @@
 package io.justdevit.kotlin.boost.retry
 
 import java.lang.Thread.sleep
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Executes the given action with a retry mechanism. The action will be attempted
@@ -9,7 +11,7 @@ import java.lang.Thread.sleep
  *
  * @param T The type of the result returned by the action.
  * @param maxAttempts The maximum number of retry attempts (default is `3`).
- * @param delay The initial delay between retry attempts in milliseconds (default is `100`).
+ * @param delay The initial delay between retry attempts (default is `100 milliseconds`).
  * @param multiplier The multiplier for increasing the delay after each attempt (default is `1`).
  * @param action The action to be executed with retry logic.
  *
@@ -19,12 +21,12 @@ import java.lang.Thread.sleep
  */
 fun <T> withRetry(
     maxAttempts: UInt = 3u,
-    delay: ULong = 100u,
+    delay: Duration = 100.milliseconds,
     multiplier: ULong = 1u,
     action: () -> T,
 ): T {
     var attempt = 0u
-    var wait = delay
+    var wait = delay.inWholeNanoseconds.toULong()
     while (attempt < maxAttempts) {
         try {
             return action()
@@ -33,7 +35,7 @@ fun <T> withRetry(
             if (attempt >= maxAttempts) {
                 throw throwable
             }
-            wait += (delay * attempt * multiplier)
+            wait += (delay.inWholeNanoseconds.toULong() * attempt * multiplier)
             if (wait > 0u) {
                 sleep(wait.toLong())
             }
