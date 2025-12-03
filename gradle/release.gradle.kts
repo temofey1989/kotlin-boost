@@ -88,35 +88,31 @@ if (ci && !alreadyPublished()) {
     configure<PublishingExtension> {
         publications {
             create<MavenPublication>("maven") {
-                if (project.name == "version-catalog") {
-                    from(components["versionCatalog"])
-                } else {
-                    from(components["java"])
-                    pom {
-                        name.set("${project.group}:${project.name}")
-                        description.set(projectDescription)
-                        url.set(scmUrl)
-                        licenses {
-                            license {
-                                name.set(licenseName)
-                                url.set(licenseUrl)
-                            }
-                        }
-                        developers {
-                            developer {
-                                id.set(developerId)
-                                name.set(developerName)
-                                email.set(developerEmail)
-                            }
-                        }
-                        scm {
-                            url.set(scmUrl)
-                            connection.set(scmConnection)
-                            developerConnection.set(scmDeveloperConnection)
+                from(components[if (project.name == "version-catalog") "versionCatalog" else "java"])
+                pom {
+                    name.set("${project.group}:${project.name}")
+                    description.set(projectDescription)
+                    url.set(scmUrl)
+                    licenses {
+                        license {
+                            name.set(licenseName)
+                            url.set(licenseUrl)
                         }
                     }
-                    suppressPomMetadataWarningsFor("runtimeElements")
+                    developers {
+                        developer {
+                            id.set(developerId)
+                            name.set(developerName)
+                            email.set(developerEmail)
+                        }
+                    }
+                    scm {
+                        url.set(scmUrl)
+                        connection.set(scmConnection)
+                        developerConnection.set(scmDeveloperConnection)
+                    }
                 }
+                suppressPomMetadataWarningsFor("runtimeElements")
             }
         }
     }
