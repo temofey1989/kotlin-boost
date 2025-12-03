@@ -75,18 +75,6 @@ subprojects {
     apply(from = "${rootProject.projectDir.path}/gradle/release.gradle.kts")
 }
 
-tasks {
-    named("clean") {
-        dependsOn(gradle.includedBuild("bom").task(":clean"))
-    }
-    named("build") {
-        dependsOn(gradle.includedBuild("bom").task(":build"))
-    }
-    named("publishToMavenLocal") {
-        dependsOn(gradle.includedBuild("bom").task(":publishToMavenLocal"))
-    }
-}
-
 // Should be moved to release.gradle.kts
 // See: https://github.com/gradle-nexus/publish-plugin/issues/81
 // See: https://github.com/gradle-nexus/publish-plugin/issues/84

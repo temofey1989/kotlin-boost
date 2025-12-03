@@ -17,6 +17,5 @@ include(
     ":testing:kotest-testcontainers-postgres",
     ":testing:kotest-testcontainers-rabbitmq",
     ":testing:rest-assured",
+    "version-catalog",
 )
-
-includeBuild("bom")

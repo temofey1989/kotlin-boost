@@ -1,0 +1,5 @@
+[bundles]
+
+boost-backend-service = [
+    'boost-logging-slf4j',
+]

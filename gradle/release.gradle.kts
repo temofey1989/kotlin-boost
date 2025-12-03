@@ -82,7 +82,8 @@ if (ci && !alreadyPublished()) {
     configure<PublishingExtension> {
         publications {
             create<MavenPublication>("maven") {
-                from(components["java"])
+                val componentName = if (project.name == "version-catalog") "versionCatalog" else "java"
+                from(components[componentName])
                 pom {
                     name.set("${project.group}:${project.name}")
                     description.set(projectDescription)
