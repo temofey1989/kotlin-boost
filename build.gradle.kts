@@ -21,58 +21,62 @@ allprojects {
 }
 
 subprojects {
+    if (project.name != "version-catalog") {
 
-    apply(
-        plugin = rootProject.libs.plugins.kotlin.jvm
-            .get()
-            .pluginId,
-    )
-    apply(
-        plugin = rootProject.libs.plugins.kotlin.serialization
-            .get()
-            .pluginId,
-    )
-    apply(
-        plugin = rootProject.libs.plugins.kotlinter
-            .get()
-            .pluginId,
-    )
+        apply(
+            plugin = rootProject.libs.plugins.kotlin.jvm
+                .get()
+                .pluginId,
+        )
+        apply(
+            plugin = rootProject.libs.plugins.kotlin.serialization
+                .get()
+                .pluginId,
+        )
+        apply(
+            plugin = rootProject.libs.plugins.kotlinter
+                .get()
+                .pluginId,
+        )
 
-    dependencies {
-        implementation(rootProject.libs.kotlin.stdlib)
-        testImplementation(rootProject.libs.bundles.testing.kotest)
-    }
-
-    java.sourceCompatibility = JavaVersion.VERSION_21
-
-    tasks {
-        kotlinter {
+        dependencies {
+            implementation(rootProject.libs.kotlin.stdlib)
+            testImplementation(rootProject.libs.bundles.testing.kotest)
         }
 
-        classes {
-            dependsOn("formatKotlin")
-        }
+        java.sourceCompatibility = JavaVersion.VERSION_21
 
-        compileKotlin {
-            compilerOptions {
-                jvmTarget = JvmTarget.fromTarget(java.sourceCompatibility.majorVersion)
-                freeCompilerArgs =
-                    listOf(
-                        "-Xjsr305=strict",
-                        "-Xcontext-parameters",
-                    )
+        tasks {
+            kotlinter {
+            }
+
+            classes {
+                dependsOn("formatKotlin")
+            }
+
+            compileKotlin {
+                compilerOptions {
+                    jvmTarget = JvmTarget.fromTarget(java.sourceCompatibility.majorVersion)
+                    freeCompilerArgs =
+                        listOf(
+                            "-Xjsr305=strict",
+                            "-Xcontext-parameters",
+                        )
+                }
+            }
+
+            test {
+                useJUnitPlatform()
+                testLogging {
+                    events(PASSED, FAILED, SKIPPED)
+                }
             }
         }
-
-        test {
-            useJUnitPlatform()
-            testLogging {
-                events(PASSED, FAILED, SKIPPED)
-            }
-        }
     }
 
-    apply(from = "${rootProject.projectDir.path}/gradle/release.gradle.kts")
+    if (project.subprojects.isEmpty()) {
+        apply(from = "${rootProject.projectDir.path}/gradle/release.gradle.kts")
+    }
 }
 
 // Should be moved to release.gradle.kts

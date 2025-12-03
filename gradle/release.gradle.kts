@@ -70,44 +70,53 @@ val ci: Boolean by lazy { System.getenv("CI")?.toBoolean() ?: false }
 if (ci && !alreadyPublished()) {
     println("INFO: Applying Maven Publication for project: ${project.name}")
 
-    apply(plugin = "org.gradle.java-library")
+    if (project.name == "version-catalog") {
+        apply(plugin = "version-catalog")
+    } else {
+        apply(plugin = "org.gradle.java-library")
+    }
     apply(plugin = "org.gradle.maven-publish")
     apply(plugin = "org.gradle.signing")
 
-    configure<JavaPluginExtension> {
-        withSourcesJar()
-        withJavadocJar()
+    if (project.name != "version-catalog") {
+        configure<JavaPluginExtension> {
+            withSourcesJar()
+            withJavadocJar()
+        }
     }
 
     configure<PublishingExtension> {
         publications {
             create<MavenPublication>("maven") {
-                val componentName = if (project.name == "version-catalog") "versionCatalog" else "java"
-                from(components[componentName])
-                pom {
-                    name.set("${project.group}:${project.name}")
-                    description.set(projectDescription)
-                    url.set(scmUrl)
-                    licenses {
-                        license {
-                            name.set(licenseName)
-                            url.set(licenseUrl)
-                        }
-                    }
-                    developers {
-                        developer {
-                            id.set(developerId)
-                            name.set(developerName)
-                            email.set(developerEmail)
-                        }
-                    }
-                    scm {
+                if (project.name == "version-catalog") {
+                    from(components["versionCatalog"])
+                } else {
+                    from(components["java"])
+                    pom {
+                        name.set("${project.group}:${project.name}")
+                        description.set(projectDescription)
                         url.set(scmUrl)
-                        connection.set(scmConnection)
-                        developerConnection.set(scmDeveloperConnection)
+                        licenses {
+                            license {
+                                name.set(licenseName)
+                                url.set(licenseUrl)
+                            }
+                        }
+                        developers {
+                            developer {
+                                id.set(developerId)
+                                name.set(developerName)
+                                email.set(developerEmail)
+                            }
+                        }
+                        scm {
+                            url.set(scmUrl)
+                            connection.set(scmConnection)
+                            developerConnection.set(scmDeveloperConnection)
+                        }
                     }
+                    suppressPomMetadataWarningsFor("runtimeElements")
                 }
-                suppressPomMetadataWarningsFor("runtimeElements")
             }
         }
     }
