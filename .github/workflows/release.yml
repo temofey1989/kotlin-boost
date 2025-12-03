@@ -18,7 +18,7 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
 
-      - run: ./gradlew -Pversion=${{github.event.release.name}} build publishToSonatype closeSonatypeStagingRepository
+      - run: ./gradlew -Pversion=${{github.event.release.name}} build publishToSonatype closeAndReleaseSonatypeStagingRepository
         env:
           PROJECT_DESCRIPTION: ${{github.event.repository.description}}
           LICENSE_NAME: The Apache License, Version 2.0
