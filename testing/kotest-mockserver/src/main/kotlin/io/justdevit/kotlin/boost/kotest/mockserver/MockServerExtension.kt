@@ -9,7 +9,7 @@ import org.mockserver.integration.ClientAndServer
  * Represents a Mock Server extension for an external tool.
  * Implements the [ExternalToolExtension] interface.
  */
-class MockServerExtension(filters: Collection<ExtensionFilter> = emptyList()) :
+class MockServerExtension(filters: Collection<ExtensionFilter> = emptySet()) :
     ExternalToolExtension<ClientAndServer>(
         holder = MockServerHolder,
         filters = filters,
@@ -17,7 +17,7 @@ class MockServerExtension(filters: Collection<ExtensionFilter> = emptyList()) :
 
     constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
 
-    constructor() : this(emptyList())
+    constructor() : this(emptySet())
 }
 
 /**
@@ -28,7 +28,7 @@ class MockServerExtension(filters: Collection<ExtensionFilter> = emptyList()) :
  */
 inline fun <reified A : Annotation> MockServerExtension(vararg predicates: (A) -> Boolean): MockServerExtension {
     val filters = when {
-        predicates.isEmpty() -> emptyList()
+        predicates.isEmpty() -> emptySet()
         else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
     }
     return MockServerExtension(filters)

@@ -13,7 +13,7 @@ import org.testcontainers.utility.DockerImageName
 const val LOCALSTACK_SERVICES_PROPERTY = "localstack.services"
 const val LOCALSTACK_IMAGE_TAG_PROPERTY = "localstack.image-tag"
 
-object LocalstackHolder : ContainerHolder<LocalStackContainer>() {
+object LocalStackHolder : ContainerHolder<LocalStackContainer>() {
 
     val imageTag = property(LOCALSTACK_IMAGE_TAG_PROPERTY, "latest")
     val services = property(LOCALSTACK_SERVICES_PROPERTY, "")
@@ -45,9 +45,9 @@ object LocalstackHolder : ContainerHolder<LocalStackContainer>() {
  * The `RabbitMqExtension` class is an implementation of the `ExternalToolExtension` interface that represents an extension for running RabbitMQ containers.
  * It provides functionality to start and stop a RabbitMQ container as needed.
  */
-class LocalstackExtension(filters: Collection<ExtensionFilter> = emptyList()) :
+class LocalStackExtension(filters: Collection<ExtensionFilter> = emptyList()) :
     ExternalToolExtension<LocalStackContainer>(
-        holder = LocalstackHolder,
+        holder = LocalStackHolder,
         filters = filters,
     ) {
 
@@ -56,24 +56,24 @@ class LocalstackExtension(filters: Collection<ExtensionFilter> = emptyList()) :
 }
 
 /**
- * Creates a [LocalstackExtension] with the specified predicates for annotation [A].
+ * Creates a [LocalStackExtension] with the specified predicates for annotation [A].
  *
  * @param predicates The predicates used to filter the annotations.
- * @return The [LocalstackExtension] object.
+ * @return The [LocalStackExtension] object.
  */
-inline fun <reified A : Annotation> LocalstackExtension(services: Collection<String> = emptyList(), vararg predicates: (A) -> Boolean): LocalstackExtension {
+inline fun <reified A : Annotation> LocalStackExtension(services: Collection<String> = emptyList(), vararg predicates: (A) -> Boolean): LocalStackExtension {
     System.setProperty(LOCALSTACK_SERVICES_PROPERTY, services.joinToString(","))
     val filters = when {
         predicates.isEmpty() -> emptyList()
         else -> predicates.map { AnnotationExtensionFilter(A::class, it) }
     }
-    return LocalstackExtension(filters)
+    return LocalStackExtension(filters)
 }
 
 /**
- * Creates a [LocalstackExtension] with the specified predicate for annotation [A].
+ * Creates a [LocalStackExtension] with the specified predicate for annotation [A].
  *
  * @param predicate The predicate used to filter the annotations.
- * @return The [LocalstackExtension] object.
+ * @return The [LocalStackExtension] object.
  */
-inline fun <reified A : Annotation> LocalstackExtension(services: Collection<String> = emptyList(), noinline predicate: (A) -> Boolean) = LocalstackExtension<A>(services, *arrayOf(predicate))
+inline fun <reified A : Annotation> LocalStackExtension(services: Collection<String> = emptyList(), noinline predicate: (A) -> Boolean) = LocalStackExtension<A>(services, *arrayOf(predicate))

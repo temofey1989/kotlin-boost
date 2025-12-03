@@ -3,7 +3,7 @@ rootProject.name = "kotlin-boost"
 include(
     ":commons",
     ":domain",
-    ":integration:eventbus",
+    ":integration:event-bus",
     ":observability:logging-core",
     ":observability:logging-slf4j",
     ":persistence:aws-s3",

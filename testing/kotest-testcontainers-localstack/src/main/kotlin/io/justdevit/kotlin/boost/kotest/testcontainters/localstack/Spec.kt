@@ -17,4 +17,4 @@ import io.justdevit.kotlin.boost.kotest.SpecInstallation
  * })
  * ```
  */
-fun SpecInstallation.localStack() = install(LocalstackExtension())
+fun SpecInstallation.localStack() = install(LocalStackExtension())

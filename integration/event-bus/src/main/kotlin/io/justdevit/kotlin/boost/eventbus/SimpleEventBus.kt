@@ -15,7 +15,7 @@ open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : Eve
 
     private val listeners: MutableList<EventListener<*>> = listeners.toMutableList()
 
-    companion object : Logging()
+    constructor(vararg listeners: EventListener<*>) : this(listeners.toList())
 
     override fun publish(vararg events: Event) {
         runBlocking {
@@ -74,4 +74,6 @@ open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : Eve
             }
         }
     }
+
+    companion object : Logging()
 }
