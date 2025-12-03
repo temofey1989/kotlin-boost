@@ -14,7 +14,6 @@ plugins {
 }
 
 allprojects {
-
     repositories {
         mavenLocal()
         mavenCentral()
@@ -41,16 +40,13 @@ subprojects {
 
     dependencies {
         implementation(rootProject.libs.kotlin.stdlib)
-        testImplementation(rootProject.libs.bundles.testing)
+        testImplementation(rootProject.libs.bundles.testing.kotest)
     }
 
     java.sourceCompatibility = JavaVersion.VERSION_21
 
     tasks {
-        formatKotlin {
-        }
-
-        lintKotlin {
+        kotlinter {
         }
 
         classes {
@@ -81,13 +77,13 @@ subprojects {
 
 tasks {
     named("clean") {
-        dependsOn(gradle.includedBuild("boost-bom").task(":clean"))
+        dependsOn(gradle.includedBuild("bom").task(":clean"))
     }
     named("build") {
-        dependsOn(gradle.includedBuild("boost-bom").task(":build"))
+        dependsOn(gradle.includedBuild("bom").task(":build"))
     }
     named("publishToMavenLocal") {
-        dependsOn(gradle.includedBuild("boost-bom").task(":publishToMavenLocal"))
+        dependsOn(gradle.includedBuild("bom").task(":publishToMavenLocal"))
     }
 }
 

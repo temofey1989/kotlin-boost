@@ -88,7 +88,7 @@ Use BOM dependency to manage the Kotlin Boost versions.
   <dependencies>
     <dependency>
       <groupId>io.justdevit.kotlin</groupId>
-      <artifactId>boost-bom</artifactId>
+      <artifactId>bom</artifactId>
       <version>${kotlin-boost.version}</version>
       <type>pom</type>
       <scope>import</scope>
@@ -100,7 +100,7 @@ Use BOM dependency to manage the Kotlin Boost versions.
 ### Gradle (.kts)
 
 ```kotlin
-implementation(platform("io.justdevit.kotlin:boost-bom:$kotlinBoostVersion"))
+implementation(platform("io.justdevit.kotlin:bom:$kotlinBoostVersion"))
 ```
 
 ---

@@ -3,28 +3,23 @@
 [versions]
 
 awaitility = '4.3.0'
-aws-sdk = '2.25.45'
-aws-crt = '0.29.18'
-janino = '3.1.11'
-jul-to-slf4j = '2.0.11'
-kotest = '5.9.1'
-kotest-extensions-mockserver = '1.3.0'
-kotest-extensions-testcontainers = '2.0.2'
-kotlin = '2.2.0'
+aws-sdk = '2.39.2'
+aws-crt = '0.40.0'
+janino = '3.1.12'
+jul-to-slf4j = '2.0.17'
+kotest = '6.0.5'
+kotlin = '2.2.21'
 kotlin-coroutines = '1.10.2'
-kotlin-serialization = '1.8.0'
-kotlinter = '5.1.1'
-ksp = '2.2.0-2.0.2'
-ksuid = '1.1.3'
-logback = '1.5.18'
-logstash-logback-encoder = '8.1'
-micronaut-library-plugin = '4.5.3'
-micronaut-platform = '4.9.1'
-mockk = '1.14.4'
+kotlin-serialization = '1.9.0'
+kotlinter = '5.3.0'
+ksuid = '1.1.4'
+logback = '1.5.21'
+logstash-logback-encoder = '9.0'
+mockk = '1.14.6'
 nexus-publish-plugin = '2.0.0'
-testcontainers = '1.20.6'
-testcontainers-keycloak = '3.6.0'
-rest-assured = '5.5.1'
+testcontainers = '2.0.2'
+testcontainers-keycloak = '4.0.0'
+rest-assured = '5.5.6'
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 
@@ -34,8 +29,6 @@ kotlin-jvm = { id = 'org.jetbrains.kotlin.jvm', version.ref = 'kotlin' }
 kotlin-serialization = { id = 'org.jetbrains.kotlin.plugin.serialization', version.ref = 'kotlin' }
 kotlinter = { id = 'org.jmailen.kotlinter', version.ref = 'kotlinter' }
 nexus-publish = { id = 'io.github.gradle-nexus.publish-plugin', version.ref = 'nexus-publish-plugin' }
-ksp = { id = 'com.google.devtools.ksp', version.ref = 'ksp' }
-micronaut-library = { id = 'io.micronaut.library', version.ref = 'micronaut-library-plugin' }
 
 # -------------------------------------------------------------------------------------------------------------------------------------------------- #
 
@@ -62,10 +55,6 @@ janino = { group = 'org.codehaus.janino', name = 'janino', version.ref = 'janino
 slf4j-extension-jul = { group = 'org.slf4j', name = 'jul-to-slf4j', version.ref = 'jul-to-slf4j' }
 logstash-logback-encoder = { group = 'net.logstash.logback', name = 'logstash-logback-encoder', version.ref = 'logstash-logback-encoder' }
 
-# Micronaut
-micronaut-platform = { group = 'io.micronaut.platform', name = 'micronaut-platform', version.ref = 'micronaut-platform' }
-micronaut-inject = { group = 'io.micronaut', name = 'micronaut-inject' }
-
 # Rest Assured
 restassured-extension-kotlin = { group = 'io.rest-assured', name = 'kotlin-extensions', version.ref = 'rest-assured' }
 
@@ -73,16 +62,16 @@ restassured-extension-kotlin = { group = 'io.rest-assured', name = 'kotlin-exten
 testcontainers-bom = { group = 'org.testcontainers', name = 'testcontainers-bom', version.ref = 'testcontainers' }
 testcontainers = { group = 'org.testcontainers', name = 'testcontainers', version.ref = 'testcontainers' }
 testcontainers-keycloak = { group = 'com.github.dasniko', name = 'testcontainers-keycloak', version.ref = 'testcontainers-keycloak' }
-testcontainers-localstack = { group = 'org.testcontainers', name = 'localstack' }
-testcontainers-postgresql = { group = 'org.testcontainers', name = 'postgresql' }
-testcontainers-rabbitmq = { group = 'org.testcontainers', name = 'rabbitmq' }
+testcontainers-localstack = { group = 'org.testcontainers', name = 'testcontainers-localstack', version.ref = 'testcontainers' }
+testcontainers-postgresql = { group = 'org.testcontainers', name = 'testcontainers-postgresql', version.ref = 'testcontainers' }
+testcontainers-rabbitmq = { group = 'org.testcontainers', name = 'testcontainers-rabbitmq', version.ref = 'testcontainers' }
 
 # Testing
 kotest-runner-junit5 = { group = 'io.kotest', name = 'kotest-runner-junit5', version.ref = 'kotest' }
 kotest-assertions-core = { group = 'io.kotest', name = 'kotest-assertions-core', version.ref = 'kotest' }
 kotest-property = { group = 'io.kotest', name = 'kotest-property', version.ref = 'kotest' }
-kotest-extensions-mockserver = { group = 'io.kotest.extensions', name = 'kotest-extensions-mockserver', version.ref = 'kotest-extensions-mockserver' }
-kotest-extensions-testcontainers = { group = 'io.kotest.extensions', name = 'kotest-extensions-testcontainers', version.ref = 'kotest-extensions-testcontainers' }
+kotest-extensions-mockserver = { group = 'io.kotest', name = 'kotest-extensions-mockserver', version.ref = 'kotest' }
+kotest-extensions-testcontainers = { group = 'io.kotest', name = 'kotest-extensions-testcontainers', version.ref = 'kotest' }
 mockk = { group = 'io.mockk', name = 'mockk', version.ref = 'mockk' }
 awaitility = { group = 'org.awaitility', name = 'awaitility', version.ref = 'awaitility' }
 
@@ -95,7 +84,7 @@ kotest = [
     'kotest-property',
     'kotest-runner-junit5',
 ]
-testing = [
+testing-kotest = [
     'kotest-assertions-core',
     'kotest-property',
     'kotest-runner-junit5',

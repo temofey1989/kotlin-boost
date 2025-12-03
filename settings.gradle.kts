@@ -1,22 +1,22 @@
 rootProject.name = "kotlin-boost"
 
 include(
-    "boost-aws-s3",
-    "boost-commons",
-    "boost-domain",
-    "boost-eventbus",
-    "boost-kotest",
-    "boost-kotest-mockk",
-    "boost-kotest-mockserver",
-    "boost-kotest-testcontainers",
-    "boost-kotest-testcontainers-keycloak",
-    "boost-kotest-testcontainers-localstack",
-    "boost-kotest-testcontainers-postgres",
-    "boost-kotest-testcontainers-rabbitmq",
-    "boost-logging-core",
-    "boost-logging-slf4j",
-    "boost-rest-assured",
-    "boost-serialization-json",
+    ":commons",
+    ":domain",
+    ":integration:eventbus",
+    ":observability:logging-core",
+    ":observability:logging-slf4j",
+    ":persistence:aws-s3",
+    ":serialization:serialization-json",
+    ":testing:kotest",
+    ":testing:kotest-mockk",
+    ":testing:kotest-mockserver",
+    ":testing:kotest-testcontainers",
+    ":testing:kotest-testcontainers-keycloak",
+    ":testing:kotest-testcontainers-localstack",
+    ":testing:kotest-testcontainers-postgres",
+    ":testing:kotest-testcontainers-rabbitmq",
+    ":testing:rest-assured",
 )
 
-includeBuild("boost-bom")
+includeBuild("bom")
