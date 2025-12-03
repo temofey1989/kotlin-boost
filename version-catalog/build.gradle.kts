@@ -36,7 +36,7 @@ tasks {
                 }
         }
     }
-    register("clean", DefaultTask::class) {
+    register("cleanVersionCatalog", DefaultTask::class) {
         group = "build"
         doLast {
             layout.buildDirectory
@@ -51,5 +51,5 @@ rootProject.tasks.named("build") {
     dependsOn(tasks.named("generateCatalogAsToml"))
 }
 rootProject.tasks.named("clean") {
-    dependsOn(tasks.named("clean"))
+    dependsOn(tasks.named("cleanVersionCatalog"))
 }
