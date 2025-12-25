@@ -1,8 +1,8 @@
 dependencies {
     api(rootProject.libs.testcontainers.keycloak)
 
-    implementation(project(":commons"))
-    implementation(project(":testing:kotest-testcontainers"))
-    implementation(project(":serialization:serialization-json"))
-    implementation(project(":testing:rest-assured"))
+    implementation(projects.commons)
+    implementation(projects.testing.kotestTestcontainers)
+    implementation(projects.serialization.serializationJson)
+    implementation(projects.testing.restAssured)
 }

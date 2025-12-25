@@ -1,7 +1,7 @@
 dependencies {
     api(rootProject.libs.kotlin.coroutines.core)
-    implementation(project(":observability:logging-core"))
+    implementation(projects.observability.loggingCore)
 
-    testImplementation(project(":observability:logging-slf4j"))
+    testImplementation(projects.observability.loggingSlf4j)
     testImplementation(rootProject.libs.awaitility)
 }

@@ -1,6 +1,6 @@
 dependencies {
     api(rootProject.libs.testcontainers.rabbitmq)
 
-    implementation(project(":commons"))
-    implementation(project(":testing:kotest-testcontainers"))
+    implementation(projects.commons)
+    implementation(projects.testing.kotestTestcontainers)
 }

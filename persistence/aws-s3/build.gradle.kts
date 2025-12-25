@@ -5,5 +5,5 @@ dependencies {
     api(rootProject.libs.aws.crt)
     compileOnly(rootProject.libs.kotlin.coroutines.core)
 
-    testImplementation(project(":testing:kotest-testcontainers-localstack"))
+    testImplementation(projects.testing.kotestTestcontainersLocalstack)
 }

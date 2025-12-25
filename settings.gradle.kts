@@ -1,4 +1,5 @@
 rootProject.name = "kotlin-boost"
+enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(
     ":commons",

@@ -1,4 +1,4 @@
 dependencies {
-    api(project(":testing:kotest"))
+    api(projects.testing.kotest)
     api(rootProject.libs.mockk)
 }

@@ -1,5 +1,5 @@
 dependencies {
-    api(project(":testing:kotest"))
+    api(projects.testing.kotest)
     api(rootProject.libs.kotest.extensions.mockserver).also {
         api("org.yaml:snakeyaml:2.0")
         api("io.netty:netty-common:4.1.118.Final")
