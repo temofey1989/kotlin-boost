@@ -16,24 +16,7 @@ Kotlin Boost is a set of libraries that can be used for boost of your project st
 
 # Dependency Management
 
-Use BOM dependency to manage the Kotlin Boost versions.
-
-### Maven
-
-```toml
-[versions]
-kotlin-boost = '<latest>'
-
-[libraries]
-kotlin-boost-bom = { group = "io.justdevit.kotlin.boost", name = "bom", version.ref = "kotlin-boost" }
-
-```
-
-### Gradle (.kts)
-
-```kotlin
-implementation(platform(libs.kotlin.boost.bom))
-```
+To use Kotlin Boost in your project, use [Version Catalog](version-catalog/README.md).
 
 ---
 
@@ -62,6 +45,7 @@ This repository is a multi-module project. Refer to individual module READMEs fo
   - [Kotest Testcontainers Postgres](testing/kotest-testcontainers-postgres/README.md)
   - [Kotest Testcontainers RabbitMQ](testing/kotest-testcontainers-rabbitmq/README.md)
   - [Rest-Assured](testing/rest-assured/README.md)
+- [Version Catalog](version-catalog/README.md)
 
 ---
 
@@ -79,7 +63,7 @@ Run tests only:
 ./gradlew test
 ```
 
-Publish to local Maven repository (for trying out from another project):
+Publish to the local Maven repository (for trying out from another project):
 
 ```bash
 ./gradlew publishToMavenLocal
