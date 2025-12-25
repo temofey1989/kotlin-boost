@@ -2,7 +2,7 @@ dependencies {
     api(projects.observability.loggingCore)
     api(libs.logback.classic)
 
-    implementation(rootProject.libs.janino)
-    implementation(rootProject.libs.slf4j.extension.jul)
-    implementation(rootProject.libs.logstash.logback.encoder)
+    implementation(libs.janino)
+    implementation(libs.slf4j.extension.jul)
+    implementation(libs.logstash.logback.encoder)
 }

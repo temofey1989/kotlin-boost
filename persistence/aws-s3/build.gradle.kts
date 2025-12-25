@@ -1,9 +1,9 @@
 dependencies {
-    api(platform(rootProject.libs.aws.bom))
-    api(rootProject.libs.aws.s3)
-    api(rootProject.libs.aws.s3.transfer)
-    api(rootProject.libs.aws.crt)
-    compileOnly(rootProject.libs.kotlin.coroutines.core)
+    api(platform(libs.aws.bom))
+    api(libs.aws.s3)
+    api(libs.aws.s3.transfer)
+    api(libs.aws.crt)
+    compileOnly(libs.kotlin.coroutines.core)
 
     testImplementation(projects.testing.kotestTestcontainersLocalstack)
 }

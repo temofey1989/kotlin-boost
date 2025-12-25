@@ -1,5 +1,5 @@
 dependencies {
-    api(rootProject.libs.testcontainers.keycloak)
+    api(libs.testcontainers.keycloak)
 
     implementation(projects.commons)
     implementation(projects.testing.kotestTestcontainers)

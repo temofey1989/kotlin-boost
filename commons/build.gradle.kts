@@ -1,3 +1,3 @@
 dependencies {
-    compileOnly(rootProject.libs.kotlin.coroutines.core)
+    compileOnly(libs.kotlin.coroutines.core)
 }

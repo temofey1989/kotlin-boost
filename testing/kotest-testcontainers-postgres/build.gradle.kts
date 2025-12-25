@@ -1,5 +1,5 @@
 dependencies {
-    api(rootProject.libs.testcontainers.postgresql)
+    api(libs.testcontainers.postgresql)
 
     implementation(projects.commons)
     implementation(projects.testing.kotestTestcontainers)

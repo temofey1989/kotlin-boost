@@ -1,5 +1,5 @@
 dependencies {
-    api(rootProject.libs.ksuid)
+    api(libs.ksuid)
 
     implementation(projects.commons)
 }

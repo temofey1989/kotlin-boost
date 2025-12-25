@@ -1,5 +1,5 @@
 dependencies {
-    implementation(rootProject.libs.ksuid)
+    implementation(libs.ksuid)
 
-    compileOnly(rootProject.libs.kotlin.coroutines.slf4j)
+    compileOnly(libs.kotlin.coroutines.slf4j)
 }
