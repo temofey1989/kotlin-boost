@@ -1,6 +1,7 @@
 package io.justdevit.kotlin.boost.kotest
 
 import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
 
 /**
  * A holder class responsible for managing the lifecycle of an external tool or resource.
@@ -27,7 +28,7 @@ abstract class ExternalToolHolder<T> {
     val tool: T
         get() {
             initialize()
-            return materialized ?: throw IllegalStateException("No extension target found!")
+            return lock.withLock { materialized } ?: throw IllegalStateException("No extension target found!")
         }
 
     /**
@@ -37,13 +38,10 @@ abstract class ExternalToolHolder<T> {
         if (materialized != null) {
             return
         }
-        try {
-            lock.lock()
+        lock.withLock {
             if (materialized == null) {
                 materialized = initializeTool()
             }
-        } finally {
-            lock.unlock()
         }
     }
 
@@ -58,9 +56,11 @@ abstract class ExternalToolHolder<T> {
      * Re-initialize the lifecycle of the extension.
      */
     fun reinitialize() {
-        tearDownTool()
-        materialized = null
-        initialize()
+        lock.withLock {
+            tearDownTool()
+            materialized = null
+            initialize()
+        }
     }
 
     /**
