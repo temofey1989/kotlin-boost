@@ -2,6 +2,8 @@ package io.justdevit.kotlin.boost.eventbus
 
 import io.kotest.core.spec.style.FreeSpec
 import io.kotest.matchers.collections.shouldContainExactly
+import io.kotest.matchers.collections.shouldHaveSize
+import io.kotest.matchers.comparables.shouldBeLessThan
 
 class SimpleEventBusTest :
     FreeSpec(
@@ -20,7 +22,9 @@ class SimpleEventBusTest :
 
                 eventBus.publish(event)
 
-                listener.listenedEvents.shouldContainExactly(event)
+                listener.testEventRecords
+                    .map { it.event }
+                    .shouldContainExactly(event)
             }
 
             "Should detect and exclude cycles in event execution" {
@@ -34,7 +38,9 @@ class SimpleEventBusTest :
 
                 eventBus.publish(event1)
 
-                listener.listenedEvents.shouldContainExactly(event1, event2, event3)
+                listener.testEventRecords
+                    .map { it.event }
+                    .shouldContainExactly(event1, event2, event3)
             }
 
             "Should accept abstract class" {
@@ -43,7 +49,38 @@ class SimpleEventBusTest :
 
                 eventBus.publish(event1, event2)
 
-                listener.listenedEvents.shouldContainExactly(event1, event2)
+                listener.testEventRecords
+                    .map { it.event }
+                    .shouldContainExactly(event1, event2)
+            }
+
+            "Should be able to handle priority" {
+                val eventBus = SimpleEventBus()
+                val event = TestEvent1("TEST-1")
+
+                val listener1 = TestListener(priority = 2)
+                eventBus.register(listener1)
+                val listener2 = TestListener(priority = 1)
+                eventBus.register(listener2)
+
+                eventBus.publish(event)
+
+                listener1.testEventRecords
+                    .shouldHaveSize(1)
+                    .map { it.event }
+                    .shouldContainExactly(event)
+                listener2.testEventRecords
+                    .shouldHaveSize(1)
+                    .map { it.event }
+                    .shouldContainExactly(event)
+
+                val firstProcessingTimestamp = listener2.testEventRecords
+                    .first()
+                    .timestamp
+                val secondProcessingTimestamp = listener1.testEventRecords
+                    .first()
+                    .timestamp
+                firstProcessingTimestamp shouldBeLessThan secondProcessingTimestamp
             }
         },
     )

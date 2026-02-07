@@ -1,16 +1,23 @@
 package io.justdevit.kotlin.boost.eventbus
 
-class TestListener : EventListener<TestEvent> {
+import kotlinx.coroutines.delay
+import kotlin.time.Clock.System.now
+import kotlin.time.Instant
 
-    val listenedEvents = mutableListOf<TestEvent>()
+class TestListener(override val priority: Int = 0) : EventListener<TestEvent> {
+
+    val testEventRecords = mutableListOf<TestEventRecord>()
 
     override val supportedClass = TestEvent::class.java
 
     override suspend fun onEvent(event: TestEvent) {
-        listenedEvents += event
+        testEventRecords += TestEventRecord(event)
+        delay(10)
     }
 
     fun clear() {
-        listenedEvents.clear()
+        testEventRecords.clear()
     }
+
+    data class TestEventRecord(val event: TestEvent, val timestamp: Instant = now())
 }

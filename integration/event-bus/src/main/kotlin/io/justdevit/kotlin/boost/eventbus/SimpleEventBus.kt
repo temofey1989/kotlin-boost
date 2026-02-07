@@ -1,6 +1,5 @@
 package io.justdevit.kotlin.boost.eventbus
 
-import io.justdevit.kotlin.boost.logging.Logging
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -8,14 +7,16 @@ import kotlinx.coroutines.runBlocking
  * of events and their listeners in the system. It facilitates the publishing of events
  * to registered listeners, allowing for processing and event chaining.
  *
- * @constructor Creates an instance of [SimpleEventBus], optionally with a list of predefined event listeners.
  * @param listeners A list of initial event listeners to register with the event bus. Default is an empty list.
+ * @param errorHandlers A list of initial error handlers to register with the event bus. Default is a list containing [LoggingErrorHandler].
  */
-open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : EventBus {
+open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList(), errorHandlers: List<ErrorHandler<*>> = listOf(LoggingErrorHandler)) :
+    EventBus,
+    EventListenerRegister,
+    ErrorHandlerRegister {
 
-    private val listeners: MutableList<EventListener<*>> = listeners.toMutableList()
-
-    constructor(vararg listeners: EventListener<*>) : this(listeners.toList())
+    private val listeners: MutableList<EventListener<*>> = listeners.sortedBy { it.priority }.toMutableList()
+    private val errorHandlers: MutableList<ErrorHandler<*>> = errorHandlers.sortedBy { it.priority }.toMutableList()
 
     override fun publish(vararg events: Event) {
         runBlocking {
@@ -29,6 +30,7 @@ open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : Eve
         }
         val distinct = listeners.toSet() - this.listeners.toSet()
         this.listeners.addAll(distinct)
+        this.listeners.sortBy { it.priority }
     }
 
     override fun unregister(vararg listeners: EventListener<*>) {
@@ -36,6 +38,22 @@ open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : Eve
             return
         }
         this.listeners.removeAll(listeners.toSet())
+    }
+
+    override fun register(vararg handlers: ErrorHandler<*>) {
+        if (errorHandlers.isEmpty()) {
+            return
+        }
+        val distinct = handlers.toSet() - this.errorHandlers.toSet()
+        this.errorHandlers.addAll(distinct)
+        this.errorHandlers.sortBy { it.priority }
+    }
+
+    override fun unregister(vararg handlers: ErrorHandler<*>) {
+        if (handlers.isEmpty()) {
+            return
+        }
+        this.errorHandlers.removeAll(handlers.toSet())
     }
 
     private suspend fun publishAll(events: List<Event>, executedEvents: MutableSet<Event> = mutableSetOf()) {
@@ -60,20 +78,34 @@ open class SimpleEventBus(listeners: List<EventListener<*>> = emptyList()) : Eve
         if (event.terminated) {
             return
         }
-        val listenersToApply = listeners
-            .filter { it.supportedClass.isInstance(event) }
-            .sortedBy { it.priority }
+        val listenersToApply = listeners.filter { it.supportedClass.isInstance(event) }
         listenersToApply.forEach {
             if (event.terminated) {
                 return@forEach
             }
+            it as EventListener<Event>
             try {
-                (it as EventListener<Event>).onEvent(event)
+                it.onEvent(event)
             } catch (throwable: Throwable) {
-                log.error(throwable) { "Listener [${it::class.qualifiedName}] while processing event: $event" }
+                it.handlerThrowable(event, throwable)
             }
         }
     }
 
-    companion object : Logging()
+    @Suppress("UNCHECKED_CAST")
+    private suspend fun EventListener<Event>.handlerThrowable(event: Event, error: Throwable) {
+        if (errorHandlers.isEmpty()) {
+            return
+        }
+        val context = ErrorContext(event = event, listener = this)
+        errorHandlers
+            .filter { it.supportedClass.isInstance(event) }
+            .forEach {
+                try {
+                    (it as ErrorHandler<Event>).handle(error, context)
+                } catch (throwable: Throwable) {
+                    LoggingErrorHandler.handle(error = throwable, context)
+                }
+            }
+    }
 }
