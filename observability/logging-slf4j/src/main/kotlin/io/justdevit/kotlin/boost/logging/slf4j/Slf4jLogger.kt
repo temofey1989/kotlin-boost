@@ -16,40 +16,40 @@ internal class Slf4jLogger(private val logger: org.slf4j.Logger) : Logger {
         if (logger.isTraceEnabled) doLog(builder, logger::trace)
     }
 
-    override fun trace(throwable: Throwable, builder: LogRecordBuilderFunction) {
-        if (logger.isTraceEnabled) doLog(throwable, builder, logger::trace)
+    override fun trace(cause: Throwable, builder: LogRecordBuilderFunction) {
+        if (logger.isTraceEnabled) doLog(cause, builder, logger::trace)
     }
 
     override fun debug(builder: LogRecordBuilderFunction) {
         if (logger.isDebugEnabled) doLog(builder, logger::debug)
     }
 
-    override fun debug(throwable: Throwable, builder: LogRecordBuilderFunction) {
-        if (logger.isDebugEnabled) doLog(throwable, builder, logger::debug)
+    override fun debug(cause: Throwable, builder: LogRecordBuilderFunction) {
+        if (logger.isDebugEnabled) doLog(cause, builder, logger::debug)
     }
 
     override fun info(builder: LogRecordBuilderFunction) {
         if (logger.isInfoEnabled) doLog(builder, logger::info)
     }
 
-    override fun info(throwable: Throwable, builder: LogRecordBuilderFunction) {
-        if (logger.isInfoEnabled) doLog(throwable, builder, logger::info)
+    override fun info(cause: Throwable, builder: LogRecordBuilderFunction) {
+        if (logger.isInfoEnabled) doLog(cause, builder, logger::info)
     }
 
     override fun warn(builder: LogRecordBuilderFunction) {
         if (logger.isWarnEnabled) doLog(builder, logger::warn)
     }
 
-    override fun warn(throwable: Throwable, builder: LogRecordBuilderFunction) {
-        if (logger.isWarnEnabled) doLog(throwable, builder, logger::warn)
+    override fun warn(cause: Throwable, builder: LogRecordBuilderFunction) {
+        if (logger.isWarnEnabled) doLog(cause, builder, logger::warn)
     }
 
     override fun error(builder: LogRecordBuilderFunction) {
         if (logger.isErrorEnabled) doLog(builder, logger::error)
     }
 
-    override fun error(throwable: Throwable, builder: LogRecordBuilderFunction) {
-        if (logger.isErrorEnabled) doLog(throwable, builder, logger::error)
+    override fun error(cause: Throwable, builder: LogRecordBuilderFunction) {
+        if (logger.isErrorEnabled) doLog(cause, builder, logger::error)
     }
 
     private fun doLog(builder: LogRecordBuilderFunction, logFun: (Marker?, String) -> Unit) {
@@ -59,14 +59,16 @@ internal class Slf4jLogger(private val logger: org.slf4j.Logger) : Logger {
     }
 
     private fun doLog(
-        throwable: Throwable,
+        cause: Throwable,
         builder: LogRecordBuilderFunction,
         logFun: (Marker?, String, Throwable) -> Unit,
     ) {
-        val record = builder.toLogRecord(throwable)
+        val record = builder.toLogRecord(cause)
         val marker = Markers.appendEntries(record.attributes)
-        logFun(marker, record.message, throwable)
+        logFun(marker, record.message, cause)
     }
 
-    private fun LogRecordBuilderFunction.toLogRecord(throwable: Throwable? = null) = LogRecordBuilder(this, throwable).build()
+    private fun LogRecordBuilderFunction.toLogRecord(cause: Throwable? = null) =
+        LogRecordBuilder(this, cause)
+            .build()
 }

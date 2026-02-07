@@ -30,10 +30,10 @@ interface Logger {
     /**
      * Creates a `TRACE`-level log record.
      *
-     * @param throwable The throwable associated with the log record.
+     * @param cause The throwable associated with the log record.
      * @param builder A lambda function used to construct the log message.
      */
-    fun trace(throwable: Throwable, builder: LogRecordBuilderFunction)
+    fun trace(cause: Throwable, builder: LogRecordBuilderFunction)
 
     /**
      * Creates a `DEBUG`-level log record.
@@ -45,10 +45,10 @@ interface Logger {
     /**
      * Creates a `DEBUG`-level log record.
      *
-     * @param throwable The throwable associated with the log record.
+     * @param cause The throwable associated with the log record.
      * @param builder A lambda function used to construct the log message.
      */
-    fun debug(throwable: Throwable, builder: LogRecordBuilderFunction)
+    fun debug(cause: Throwable, builder: LogRecordBuilderFunction)
 
     /**
      * Creates a `INFO`-level log record.
@@ -60,10 +60,10 @@ interface Logger {
     /**
      * Creates a `INFO`-level log record.
      *
-     * @param throwable The throwable associated with the log record.
+     * @param cause The throwable associated with the log record.
      * @param builder A lambda function used to construct the log message.
      */
-    fun info(throwable: Throwable, builder: LogRecordBuilderFunction)
+    fun info(cause: Throwable, builder: LogRecordBuilderFunction)
 
     /**
      * Creates a `WARN`-level log record.
@@ -75,10 +75,10 @@ interface Logger {
     /**
      * Creates a `WARN`-level log record.
      *
-     * @param throwable The throwable associated with the log record.
+     * @param cause The throwable associated with the log record.
      * @param builder A lambda function used to construct the log message.
      */
-    fun warn(throwable: Throwable, builder: LogRecordBuilderFunction)
+    fun warn(cause: Throwable, builder: LogRecordBuilderFunction)
 
     /**
      * Creates a `ERROR`-level log record.
@@ -90,10 +90,10 @@ interface Logger {
     /**
      * Creates a `ERROR`-level log record.
      *
-     * @param throwable The throwable associated with the log record.
+     * @param cause The throwable associated with the log record.
      * @param builder A lambda function used to construct the log message.
      */
-    fun error(throwable: Throwable, builder: LogRecordBuilderFunction)
+    fun error(cause: Throwable, builder: LogRecordBuilderFunction)
 }
 
 /**
