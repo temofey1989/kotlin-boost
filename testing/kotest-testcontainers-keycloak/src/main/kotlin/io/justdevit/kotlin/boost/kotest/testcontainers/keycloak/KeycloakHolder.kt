@@ -4,6 +4,7 @@ import dasniko.testcontainers.keycloak.KeycloakContainer
 import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.io.listResourceFiles
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
+import org.testcontainers.containers.Network.SHARED
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 
 /**
@@ -18,6 +19,8 @@ object KeycloakHolder : ContainerHolder<KeycloakContainer>() {
     override fun initializeTool() =
         KeycloakContainer("quay.io/keycloak/keycloak:$imageTag").apply {
             registerRealms()
+            withNetwork(SHARED)
+            withNetworkAliases("keycloak")
             start()
             waitingFor(HostPortWaitStrategy())
             configureSystemProperties()

@@ -6,6 +6,7 @@ import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
 import org.testcontainers.containers.BindMode.READ_WRITE
+import org.testcontainers.containers.Network.SHARED
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.localstack.LocalStackContainer
 import org.testcontainers.utility.DockerImageName
@@ -22,8 +23,10 @@ object LocalStackHolder : ContainerHolder<LocalStackContainer>() {
 
     override fun initializeTool() =
         LocalStackContainer(DockerImageName.parse("localstack/localstack:$imageTag")).apply {
-            start()
+            withNetwork(SHARED)
+            withNetworkAliases("localstack")
             withEnv("DEBUG", "1")
+            start()
             withClasspathResourceMapping("/localstack", "/etc/localstack/init/ready.d", READ_WRITE)
             withServices(*services.toTypedArray())
             waitingFor(Wait.forLogMessage(".*Local Stack has been initialized\\.\n", 1))

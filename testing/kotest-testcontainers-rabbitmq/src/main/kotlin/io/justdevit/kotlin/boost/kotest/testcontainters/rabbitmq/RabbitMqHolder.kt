@@ -2,6 +2,7 @@ package io.justdevit.kotlin.boost.kotest.testcontainters.rabbitmq
 
 import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
+import org.testcontainers.containers.Network.SHARED
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 import org.testcontainers.rabbitmq.RabbitMQContainer
 
@@ -14,6 +15,8 @@ object RabbitMqHolder : ContainerHolder<RabbitMQContainer>() {
 
     override fun initializeTool() =
         RabbitMQContainer("rabbitmq:$imageTag").apply {
+            withNetwork(SHARED)
+            withNetworkAliases("rabbitmq")
             start()
             waitingFor(HostPortWaitStrategy())
             System.setProperty("RABBITMQ_HOST", host)

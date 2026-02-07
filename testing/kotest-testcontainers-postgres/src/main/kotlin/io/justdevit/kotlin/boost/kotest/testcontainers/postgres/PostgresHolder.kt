@@ -2,6 +2,7 @@ package io.justdevit.kotlin.boost.kotest.testcontainers.postgres
 
 import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
+import org.testcontainers.containers.Network.SHARED
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 import org.testcontainers.postgresql.PostgreSQLContainer
 import org.testcontainers.postgresql.PostgreSQLContainer.POSTGRESQL_PORT
@@ -22,6 +23,8 @@ object PostgresHolder : ContainerHolder<PostgreSQLContainer>() {
 
     override fun initializeTool() =
         PostgreSQLContainer("postgres:$imageTag").apply {
+            withNetwork(SHARED)
+            withNetworkAliases("postgres")
             start()
             waitingFor(HostPortWaitStrategy())
             System.setProperty("POSTGRES_URL", jdbcUrl)
