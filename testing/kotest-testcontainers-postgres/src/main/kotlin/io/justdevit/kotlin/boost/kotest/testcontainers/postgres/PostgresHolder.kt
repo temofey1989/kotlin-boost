@@ -4,6 +4,7 @@ import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 import org.testcontainers.postgresql.PostgreSQLContainer
+import org.testcontainers.postgresql.PostgreSQLContainer.POSTGRESQL_PORT
 
 /**
  * An object responsible for managing the lifecycle of a PostgreSQL test container.
@@ -25,8 +26,8 @@ object PostgresHolder : ContainerHolder<PostgreSQLContainer>() {
             waitingFor(HostPortWaitStrategy())
             System.setProperty("POSTGRES_URL", jdbcUrl)
             System.setProperty("POSTGRES_HOST", host)
-            System.setProperty("POSTGRES_PORT", getMappedPort(PostgreSQLContainer.POSTGRESQL_PORT).toString())
-            System.setProperty("POSTGRES_NAME", databaseName)
+            System.setProperty("POSTGRES_PORT", getMappedPort(POSTGRESQL_PORT).toString())
+            System.setProperty("POSTGRES_DATABASE", databaseName)
             System.setProperty("POSTGRES_USERNAME", username)
             System.setProperty("POSTGRES_PASSWORD", password)
         }
