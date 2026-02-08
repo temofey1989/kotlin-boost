@@ -14,9 +14,27 @@ import org.testcontainers.utility.DockerImageName
 const val LOCALSTACK_SERVICES_PROPERTY = "localstack.services"
 const val LOCALSTACK_IMAGE_TAG_PROPERTY = "localstack.image-tag"
 
+/**
+ * An object responsible for managing the lifecycle of a Keycloak test container.
+ */
 object LocalStackHolder : ContainerHolder<LocalStackContainer>() {
 
+    /**
+     * Represents the default Docker image tag used for initializing and running Localstack containers in the testing environment.
+     * The value can be overridden by specifying a system property or environment variable named `localstack.image-tag`.
+     *
+     * If not explicitly defined, this variable defaults to `latest`.
+     */
     val imageTag = property(LOCALSTACK_IMAGE_TAG_PROPERTY, "latest")
+
+    /**
+     * A list of services configured for the LocalStack environment.
+     *
+     * This variable retrieves the value of the property specified by the `LOCALSTACK_SERVICES_PROPERTY` key
+     * and splits it into individual service names. Each service is trimmed of unnecessary whitespace.
+     *
+     * The resulting list of services can later be used to configure and interact with the LocalStack container.
+     */
     val services = property(LOCALSTACK_SERVICES_PROPERTY, "")
         .split(",")
         .map(String::trim)

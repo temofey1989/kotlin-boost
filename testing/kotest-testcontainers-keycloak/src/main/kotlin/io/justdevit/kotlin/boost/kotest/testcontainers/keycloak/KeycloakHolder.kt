@@ -12,8 +12,21 @@ import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
  */
 object KeycloakHolder : ContainerHolder<KeycloakContainer>() {
 
+    /**
+     * Represents the default Docker image tag used for initializing and running Keycloak containers in the testing environment.
+     * The value can be overridden by specifying a system property or environment variable named `keycloak.image-tag`.
+     *
+     * If not explicitly defined, this variable defaults to `latest`.
+     */
     val imageTag = property("keycloak.image-tag", "latest")
 
+    /**
+     * Specifies the directory where Keycloak realm configurations are located.
+     *
+     * This variable retrieves its value from the property `keycloak.realm-directory`,
+     * defaulting to `realms` if the property is not set. It is used to configure
+     * the location of realm-related data and settings in a Keycloak environment.
+     */
     val realmDirectory = property("keycloak.realm-directory", "realms")
 
     override fun initializeTool() =

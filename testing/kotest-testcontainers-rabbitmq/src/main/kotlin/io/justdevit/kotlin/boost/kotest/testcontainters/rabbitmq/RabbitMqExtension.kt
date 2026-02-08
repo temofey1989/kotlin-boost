@@ -6,7 +6,7 @@ import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import org.testcontainers.rabbitmq.RabbitMQContainer
 
 /**
- * The `RabbitMqExtension` class is an implementation of the `ExternalToolExtension` interface that represents an extension for running RabbitMQ containers.
+ * The [RabbitMqExtension] class is an implementation of the [ExternalToolExtension] interface that represents an extension for running RabbitMQ containers.
  * It provides functionality to start and stop a RabbitMQ container as needed.
  */
 class RabbitMqExtension(filters: Collection<ExtensionFilter> = emptyList()) :

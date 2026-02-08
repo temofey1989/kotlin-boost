@@ -13,11 +13,10 @@ import org.testcontainers.postgresql.PostgreSQLContainer.POSTGRESQL_PORT
 object PostgresHolder : ContainerHolder<PostgreSQLContainer>() {
 
     /**
-     * Represents the Docker image tag used for the PostgreSQL container.
+     * Represents the default Docker image tag used for initializing and running Postgres containers in the testing environment.
+     * The value can be overridden by specifying a system property or environment variable named `postgres.image-tag`.
      *
-     * The value is retrieved from a property with the name `POSTGRES_IMAGE_TAG`. If the property is not found,
-     * the default value `latest` is used. This allows for flexibility in specifying the image version
-     * for the PostgreSQL container during the runtime of tests or applications interacting with the container.
+     * If not explicitly defined, this variable defaults to `latest`.
      */
     val imageTag: String = property("postgres.image-tag", "latest")
 
