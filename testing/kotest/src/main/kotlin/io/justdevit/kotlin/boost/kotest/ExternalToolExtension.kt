@@ -8,8 +8,12 @@ import kotlin.reflect.KClass
 
 /**
  * Represents an extension for an external tool.
+ *
+ * @param T The type of the external tool.
+ * @property holder The holder of the external tool.
+ * @property filters The filters for selecting classes to be initialized.
  */
-abstract class ExternalToolExtension<T>(private val holder: ExternalToolHolder<T>, protected val filters: Collection<ExtensionFilter> = emptyList()) :
+abstract class ExternalToolExtension<T>(protected val holder: ExternalToolHolder<T>, protected val filters: Collection<ExtensionFilter> = emptyList()) :
     ConstructorExtension,
     AfterProjectListener,
     MountableExtension<T, T> {
@@ -21,5 +25,8 @@ abstract class ExternalToolExtension<T>(private val holder: ExternalToolHolder<T
         return null
     }
 
-    override fun mount(configure: T.() -> Unit) = holder.tool.also(configure)
+    override fun mount(configure: T.() -> Unit): T {
+        holder.initialize()
+        return holder.tool.also(configure)
+    }
 }

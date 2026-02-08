@@ -16,8 +16,6 @@ class MockServerExtension(filters: Collection<ExtensionFilter> = emptySet()) :
     ) {
 
     constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
-
-    constructor() : this(emptySet())
 }
 
 /**

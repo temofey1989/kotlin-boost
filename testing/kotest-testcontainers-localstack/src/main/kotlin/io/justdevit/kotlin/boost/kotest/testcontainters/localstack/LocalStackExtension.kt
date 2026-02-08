@@ -3,8 +3,8 @@ package io.justdevit.kotlin.boost.kotest.testcontainters.localstack
 import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExtensionFilter
-import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
+import io.justdevit.kotlin.boost.kotest.testcontainers.TestcontainerExtension
 import org.testcontainers.containers.BindMode.READ_WRITE
 import org.testcontainers.containers.Network.SHARED
 import org.testcontainers.containers.wait.strategy.Wait
@@ -67,13 +67,12 @@ object LocalStackHolder : ContainerHolder<LocalStackContainer>() {
  * It provides functionality to start and stop a RabbitMQ container as needed.
  */
 class LocalStackExtension(filters: Collection<ExtensionFilter> = emptyList()) :
-    ExternalToolExtension<LocalStackContainer>(
+    TestcontainerExtension<LocalStackContainer>(
         holder = LocalStackHolder,
         filters = filters,
     ) {
 
     constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
-    constructor() : this(emptyList())
 }
 
 /**

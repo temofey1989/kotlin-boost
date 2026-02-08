@@ -3,6 +3,7 @@ package io.justdevit.kotlin.boost.kotest.testcontainters.rabbitmq
 import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
+import io.justdevit.kotlin.boost.kotest.testcontainers.TestcontainerExtension
 import org.testcontainers.rabbitmq.RabbitMQContainer
 
 /**
@@ -10,13 +11,12 @@ import org.testcontainers.rabbitmq.RabbitMQContainer
  * It provides functionality to start and stop a RabbitMQ container as needed.
  */
 class RabbitMqExtension(filters: Collection<ExtensionFilter> = emptyList()) :
-    ExternalToolExtension<RabbitMQContainer>(
+    TestcontainerExtension<RabbitMQContainer>(
         holder = RabbitMqHolder,
         filters = filters,
     ) {
 
     constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
-    constructor() : this(emptyList())
 }
 
 /**

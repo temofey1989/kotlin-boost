@@ -18,18 +18,12 @@ abstract class ExternalToolHolder<T> {
     protected var materialized: T? = null
 
     /**
-     * Provides access to a lazily initialized tool or resource managed by this holder.
+     * Provides access to an initialized tool or resource managed by this holder.
      *
-     * Calling this property triggers the initialization process if the tool is not already initialized.
-     * A thread-safe mechanism ensures only a single initialization occurs even in concurrent scenarios.
-     *
-     * @throws IllegalStateException If the tool or resource is not successfully initialized.
+     * @throws IllegalStateException If the tool or resource is not initialized.
      */
     val tool: T
-        get() {
-            initialize()
-            return lock.withLock { materialized } ?: throw IllegalStateException("No extension target found!")
-        }
+        get() = lock.withLock { materialized } ?: throw IllegalStateException("External tool is not initialized.")
 
     /**
      * Performs thread-safe initialization of the `materialized` resource.

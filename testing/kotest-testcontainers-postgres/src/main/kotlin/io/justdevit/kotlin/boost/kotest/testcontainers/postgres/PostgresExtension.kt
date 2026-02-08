@@ -2,7 +2,7 @@ package io.justdevit.kotlin.boost.kotest.testcontainers.postgres
 
 import io.justdevit.kotlin.boost.kotest.AnnotationExtensionFilter
 import io.justdevit.kotlin.boost.kotest.ExtensionFilter
-import io.justdevit.kotlin.boost.kotest.ExternalToolExtension
+import io.justdevit.kotlin.boost.kotest.testcontainers.TestcontainerExtension
 import org.testcontainers.postgresql.PostgreSQLContainer
 
 /**
@@ -10,12 +10,11 @@ import org.testcontainers.postgresql.PostgreSQLContainer
  * It provides functionality to start and stop a PostgreSQL container as needed.
  */
 class PostgresExtension(filters: Collection<ExtensionFilter> = emptyList()) :
-    ExternalToolExtension<PostgreSQLContainer>(
+    TestcontainerExtension<PostgreSQLContainer>(
         holder = PostgresHolder,
         filters = filters,
     ) {
     constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
-    constructor() : this(emptyList())
 }
 
 /**

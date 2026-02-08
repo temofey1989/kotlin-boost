@@ -20,7 +20,6 @@ class KeycloakExtension(filters: Collection<ExtensionFilter> = emptyList()) :
     ) {
 
     constructor(vararg filters: ExtensionFilter) : this(filters.toSet())
-    constructor() : this(emptyList())
 }
 
 /**

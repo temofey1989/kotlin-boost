@@ -14,7 +14,7 @@ fun Spec.install(configure: SpecInstallation.() -> Unit) {
     installer.configure()
 }
 
-class SpecInstallation(val spec: Spec) {
+class SpecInstallation internal constructor(val spec: Spec) {
 
     /**
      * Installs the specified Mountable Extension for the current testing specification.
