@@ -17,6 +17,7 @@ include(
     ":testing:kotest-testcontainers-localstack",
     ":testing:kotest-testcontainers-postgres",
     ":testing:kotest-testcontainers-rabbitmq",
+    ":testing:kotest-testcontainers-toxiproxy",
     ":testing:rest-assured",
     "version-catalog",
 )

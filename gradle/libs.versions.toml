@@ -68,6 +68,7 @@ testcontainers-keycloak = { group = 'com.github.dasniko', name = 'testcontainers
 testcontainers-localstack = { group = 'org.testcontainers', name = 'testcontainers-localstack', version.ref = 'testcontainers' }
 testcontainers-postgresql = { group = 'org.testcontainers', name = 'testcontainers-postgresql', version.ref = 'testcontainers' }
 testcontainers-rabbitmq = { group = 'org.testcontainers', name = 'testcontainers-rabbitmq', version.ref = 'testcontainers' }
+testcontainers-toxiproxy = { group = 'org.testcontainers', name = 'testcontainers-toxiproxy', version.ref = 'testcontainers' }
 
 # Testing
 kotest-runner-junit5 = { group = 'io.kotest', name = 'kotest-runner-junit5', version.ref = 'kotest' }
