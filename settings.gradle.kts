@@ -10,6 +10,7 @@ include(
     ":persistence:aws-s3",
     ":serialization:serialization-json",
     ":testing:kotest",
+    ":testing:kotest-logging-asserts",
     ":testing:kotest-mockk",
     ":testing:kotest-mockserver",
     ":testing:kotest-testcontainers",

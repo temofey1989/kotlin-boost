@@ -37,6 +37,7 @@ This repository is a multi-module project. Refer to individual module READMEs fo
   - [Serialization JSON](serialization/serialization-json/README.md)
 - Testing
   - [Kotest](testing/kotest/README.md)
+  - [Kotest Logging Asserts](testing/kotest-logging-asserts/README.md)
   - [Kotest MockK](testing/kotest-mockk/README.md)
   - [Kotest MockServer](testing/kotest-mockserver/README.md)
   - [Kotest Testcontainers (Core)](testing/kotest-testcontainers/README.md)
