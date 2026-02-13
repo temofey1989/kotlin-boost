@@ -18,6 +18,15 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v3
 
+      - name: Verify version matches release tag
+        run: |
+          ROOT_VERSION=$(grep "^version\s*=" gradle.properties | cut -d'=' -f2 | sed -e 's/^[[:space:]]*//')
+          RELEASE_NAME="${{ github.event.release.name }}"
+          if [ "$ROOT_VERSION" != "$RELEASE_NAME" ]; then
+            echo "Error: Root version ($ROOT_VERSION) does not match release name ($RELEASE_NAME)."
+            exit 1
+          fi
+
       - run: ./gradlew build publishToSonatype closeAndReleaseSonatypeStagingRepository
         env:
           PROJECT_DESCRIPTION: ${{github.event.repository.description}}
