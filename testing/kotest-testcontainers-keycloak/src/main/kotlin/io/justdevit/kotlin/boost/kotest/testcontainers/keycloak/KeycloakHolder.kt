@@ -4,6 +4,7 @@ import dasniko.testcontainers.keycloak.KeycloakContainer
 import io.justdevit.kotlin.boost.environment.property
 import io.justdevit.kotlin.boost.io.listResourceFiles
 import io.justdevit.kotlin.boost.kotest.testcontainers.ContainerHolder
+import org.keycloak.admin.client.Keycloak
 import org.testcontainers.containers.Network.SHARED
 import org.testcontainers.containers.wait.strategy.HostPortWaitStrategy
 
@@ -28,6 +29,13 @@ object KeycloakHolder : ContainerHolder<KeycloakContainer>() {
      * the location of realm-related data and settings in a Keycloak environment.
      */
     val realmDirectory = property("keycloak.realm-directory", "realms")
+
+    /**
+     * Represents an instance of the Keycloak admin client.
+     */
+    val client: Keycloak by lazy {
+        tool.keycloakAdminClient
+    }
 
     override fun initializeTool() =
         KeycloakContainer("quay.io/keycloak/keycloak:$imageTag").apply {

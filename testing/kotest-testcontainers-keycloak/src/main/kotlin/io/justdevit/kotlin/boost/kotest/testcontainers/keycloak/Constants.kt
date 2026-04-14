@@ -49,8 +49,8 @@ val KEYCLOAK_SPEC: RequestSpecification by lazy {
  * This variable lazily retrieves all the realms from the Keycloak admin client and maps them to a list of realm names.
  */
 val KEYCLOAK_REALMS: List<String>
-    get() = KeycloakHolder.tool
-        .keycloakAdminClient
+    get() = KeycloakHolder
+        .client
         .realms()
         .findAll()
         .map { it.realm }
